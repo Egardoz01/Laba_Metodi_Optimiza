@@ -20,6 +20,21 @@ namespace MetodiOptimizaciiLaba
         public int nRestrs;
         public List<int> basisVariables;
         public List<int> freeVariables;
+
+
+        public SimplexMethod(SimplexMethod sm)
+        {
+            table = sm.table.Clone() as Rational[,];
+            basisVariables = new List<int>(sm.basisVariables);
+            freeVariables = new List<int>(sm.freeVariables);
+            NStep = sm.NStep;
+            f = sm.f.Clone() as Rational[];
+            restrs = sm.restrs.Clone() as Rational[,];
+            solution = sm.solution.Clone() as Rational[];
+            nVars = sm.nVars;
+            nRestrs = sm.nRestrs;
+        }
+
         public SimplexMethod(Rational[] f, Rational[,] restrs)
         {
             this.f = f.Clone() as Rational[];

@@ -12,22 +12,32 @@ namespace MetodiOptimizaciiLaba
 {
     public partial class SimplexMethodForm : Form
     {
-        private readonly SimplexMethod sm;
+        private List<SimplexMethod> steps;
+        private int nSteps;
+        private int curStep;
         public SimplexMethodForm(SimplexMethod sm)
         {
             InitializeComponent();
-            this.sm = sm;
+            nSteps = 0;
+            curStep = 0;
+            steps = new List<SimplexMethod>();
+            steps.Add(sm);
         }
 
         private void SimplexMethodForm_Load(object sender, EventArgs e)
         {
-            DrawTable();
+            DrawCurStep();
+            CheckButtonsState();
         }
 
-        private void DrawTable()
+        private void DrawCurStep()
         {
             SimplexTable.Columns.Clear();
             SimplexTable.Rows.Clear();
+
+            lblCurStep.Text = $"Текущий шаг {curStep} из {nSteps}";
+
+            SimplexMethod sm = steps[curStep];
 
             for (int i = 0; i < sm.freeVariables.Count + 2; i++)
                 SimplexTable.Columns.Add("", "");
@@ -56,7 +66,7 @@ namespace MetodiOptimizaciiLaba
 
         private void DrawOporniyElements()
         {
-            List<Point> elements = sm.GetAvailableOporniyElements();
+            List<Point> elements = steps[curStep].GetAvailableOporniyElements();
 
             foreach (Point el in elements)
             {
@@ -66,16 +76,45 @@ namespace MetodiOptimizaciiLaba
 
         private void SimplexTable_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            Point p = new Point(e.RowIndex - 1, e.ColumnIndex - 1);
-            List<Point> elements = sm.GetAvailableOporniyElements();
-            if (!elements.Contains(p))
+            if (nSteps == curStep)
             {
-                MessageBox.Show("Опорный элемент выбран неправильно");
-                return;
-            }
+                Point p = new Point(e.RowIndex - 1, e.ColumnIndex - 1);
+                List<Point> elements = steps[nSteps].GetAvailableOporniyElements();
+                if (!elements.Contains(p))
+                {
+                    MessageBox.Show("Опорный элемент выбран неправильно");
+                    return;
+                }
 
-            sm.MakeStep(p);
-            DrawTable();
+                steps.Add(new SimplexMethod(steps[nSteps]));
+                nSteps++;
+                curStep++;
+                steps[nSteps].MakeStep(p);
+                DrawCurStep();
+                CheckButtonsState();
+            }
+        }
+
+        private void CheckButtonsState()
+        {
+            btnNextStep.Enabled = (curStep != nSteps);
+
+            btnPrevStep.Enabled = curStep != 0;
+        }
+
+        private void btnNextStep_Click(object sender, EventArgs e)
+        {
+            curStep++;
+            DrawCurStep();
+            CheckButtonsState();
+        }
+
+        private void btnPrevStep_Click(object sender, EventArgs e)
+        {
+
+            curStep--;
+            DrawCurStep();
+            CheckButtonsState();
         }
     }
 }
