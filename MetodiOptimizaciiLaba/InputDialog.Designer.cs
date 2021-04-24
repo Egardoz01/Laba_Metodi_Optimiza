@@ -188,7 +188,7 @@
             this.Controls.Add(this.VariablesAmount);
             this.Controls.Add(this.dataGridView1);
             this.Name = "InputDialog";
-            this.Text = "ImputDialog";
+            this.Text = "InputDialog";
             ((System.ComponentModel.ISupportInitialize)(this.RestrAmount)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.VariablesAmount)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();

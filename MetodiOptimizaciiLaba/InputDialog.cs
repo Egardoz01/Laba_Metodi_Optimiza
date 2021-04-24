@@ -176,6 +176,7 @@ namespace MetodiOptimizaciiLaba
                     VariablesAmount.Value = dataGridView1.ColumnCount - 2;
                     RestrAmount.Value = dataGridView1.RowCount - 3;
                     change_value = true;
+                    LoadBasicSolutionGrid((int)VariablesAmount.Value);
                 }
 
 
@@ -241,6 +242,8 @@ namespace MetodiOptimizaciiLaba
             {
                 sm.SetBasicSolution(GetBasicSolution());
                 sm.CountTable();
+                SimplexMethodForm form = new SimplexMethodForm(sm);
+                form.ShowDialog();
             }
             catch (Exception ex)
             {
@@ -269,7 +272,7 @@ namespace MetodiOptimizaciiLaba
             Rational[]  solution = new Rational[var_num];
             for (int i = 0; i < var_num; i++)
             {
-                string s = dataGridView1.Rows[1].Cells[i].Value as string;
+                string s = dataGridView2.Rows[1].Cells[i].Value as string;
                 try
                 {
                     solution[i] = s.ParseRational();

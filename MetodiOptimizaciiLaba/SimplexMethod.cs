@@ -1,6 +1,7 @@
 ﻿using Microsoft.SolverFoundation.Common;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,9 +13,9 @@ namespace MetodiOptimizaciiLaba
     {
         private Rational[] f;
         private Rational[,] restrs;
-        private Rational[,] table;
+        public Rational[,] table;
         public Rational[] solution;
-
+        public int NStep;
         public int nVars;
         public int nRestrs;
         public List<int> basisVariables;
@@ -25,6 +26,7 @@ namespace MetodiOptimizaciiLaba
             this.restrs = restrs.Clone() as Rational[,];
             nVars = f.Length - 1;
             nRestrs = restrs.GetLength(0);
+            NStep = 0;
         }
 
         public bool ValidateInput()
@@ -96,6 +98,7 @@ namespace MetodiOptimizaciiLaba
 
         public void SetBasicSolution(Rational[] solution)
         {
+
             if (solution.Length != nVars)
                 throw new Exception("Решение не соответствует количеству переменных");
            
@@ -231,6 +234,80 @@ namespace MetodiOptimizaciiLaba
             table[nBasis, nFree] = -sum;
             
             int a = 0;
+        }
+
+        public List<Point> GetAvailableOporniyElements()
+        {
+            List<Point> elements = new List<Point>();
+
+            int last = nRestrs;
+            for (int i = 0; i < freeVariables.Count; i++)
+            {
+                if (table[last, i] < 0)
+                {
+                    int oporniy = -1;
+                    Rational otn =0;
+                    for (int j = 0; j < last; j++)
+                    {
+                        if (table[j, i] > 0)
+                        {
+                            oporniy = j;
+                            otn =  table[j,freeVariables.Count]/ table[j, i];
+                            break;
+                        }
+                    }
+                    if (oporniy == -1)
+                        continue;
+                    for (int j = oporniy+1; j < last; j++)
+                    {
+                        if (table[j, i] > 0)
+                        {
+                            Rational otn2 = table[j, freeVariables.Count] / table[j, i];
+                            if (otn2 < otn)
+                            {
+                                oporniy = j;
+                                otn = otn2;
+                            }
+                        }
+                    }
+                    elements.Add(new Point(oporniy, i));
+                }
+            }
+            return elements;
+        }
+
+        public void MakeStep(Point element)
+        {
+            Rational[,] nextTable = new Rational[table.GetLength(0),table.GetLength(1)];
+            int row = element.X;
+            int col = element.Y;
+
+            nextTable[row, col] = 1 / table[row, col];
+
+            for (int i = 0; i <=freeVariables.Count; i++)
+                nextTable[row, i] = table[row, i] / table[row, col];
+
+            for (int i = 0; i <=basisVariables.Count; i++)
+            {
+                if (i == row)
+                    continue;
+                for (int j = 0; j <=freeVariables.Count; j++)
+                {
+                    nextTable[i, j] = table[i, j] - table[i, col] * nextTable[row, j];
+                }
+            }
+            
+
+            for (int i = 0; i <=basisVariables.Count; i++)
+                nextTable[i, col] = -table[i, col] / table[row, col];
+
+            nextTable[row, col] = 1 / table[row, col];
+
+            table = nextTable;
+            int tmp = freeVariables[col];
+            freeVariables[col] = basisVariables[row];
+            basisVariables[row] = tmp;
+            NStep++;
         }
     }
 }
