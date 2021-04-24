@@ -39,15 +39,17 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.radioButton2 = new System.Windows.Forms.RadioButton();
             this.radioButton1 = new System.Windows.Forms.RadioButton();
+            this.dataGridView2 = new System.Windows.Forms.DataGridView();
             ((System.ComponentModel.ISupportInitialize)(this.RestrAmount)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.VariablesAmount)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.groupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
             this.SuspendLayout();
             // 
             // btnImport
             // 
-            this.btnImport.Location = new System.Drawing.Point(800, 378);
+            this.btnImport.Location = new System.Drawing.Point(33, 125);
             this.btnImport.Name = "btnImport";
             this.btnImport.Size = new System.Drawing.Size(96, 34);
             this.btnImport.TabIndex = 13;
@@ -57,7 +59,7 @@
             // 
             // btnSve
             // 
-            this.btnSve.Location = new System.Drawing.Point(914, 378);
+            this.btnSve.Location = new System.Drawing.Point(147, 125);
             this.btnSve.Name = "btnSve";
             this.btnSve.Size = new System.Drawing.Size(86, 34);
             this.btnSve.TabIndex = 12;
@@ -68,7 +70,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(4, 84);
+            this.label2.Location = new System.Drawing.Point(30, 84);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(129, 13);
             this.label2.TabIndex = 11;
@@ -76,7 +78,7 @@
             // 
             // RestrAmount
             // 
-            this.RestrAmount.Location = new System.Drawing.Point(138, 82);
+            this.RestrAmount.Location = new System.Drawing.Point(164, 82);
             this.RestrAmount.Name = "RestrAmount";
             this.RestrAmount.ReadOnly = true;
             this.RestrAmount.Size = new System.Drawing.Size(57, 20);
@@ -86,7 +88,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(4, 58);
+            this.label1.Location = new System.Drawing.Point(30, 58);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(128, 13);
             this.label1.TabIndex = 9;
@@ -94,7 +96,7 @@
             // 
             // VariablesAmount
             // 
-            this.VariablesAmount.Location = new System.Drawing.Point(138, 56);
+            this.VariablesAmount.Location = new System.Drawing.Point(164, 56);
             this.VariablesAmount.Maximum = new decimal(new int[] {
             16,
             0,
@@ -111,10 +113,10 @@
             this.dataGridView1.AllowUserToAddRows = false;
             this.dataGridView1.AllowUserToDeleteRows = false;
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Location = new System.Drawing.Point(240, 25);
+            this.dataGridView1.Location = new System.Drawing.Point(311, 25);
             this.dataGridView1.MultiSelect = false;
             this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(785, 347);
+            this.dataGridView1.Size = new System.Drawing.Size(714, 347);
             this.dataGridView1.TabIndex = 7;
             // 
             // btnSolve
@@ -132,15 +134,16 @@
             this.groupBox1.Controls.Add(this.radioButton2);
             this.groupBox1.Controls.Add(this.radioButton1);
             this.groupBox1.Controls.Add(this.btnSolve);
-            this.groupBox1.Location = new System.Drawing.Point(701, 419);
+            this.groupBox1.Location = new System.Drawing.Point(12, 345);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(324, 136);
+            this.groupBox1.Size = new System.Drawing.Size(278, 136);
             this.groupBox1.TabIndex = 15;
             this.groupBox1.TabStop = false;
             // 
             // radioButton2
             // 
             this.radioButton2.AutoSize = true;
+            this.radioButton2.Checked = true;
             this.radioButton2.Location = new System.Drawing.Point(35, 42);
             this.radioButton2.Name = "radioButton2";
             this.radioButton2.Size = new System.Drawing.Size(196, 17);
@@ -156,15 +159,26 @@
             this.radioButton1.Name = "radioButton1";
             this.radioButton1.Size = new System.Drawing.Size(180, 17);
             this.radioButton1.TabIndex = 15;
-            this.radioButton1.TabStop = true;
             this.radioButton1.Text = "Метод искусственного базиса";
             this.radioButton1.UseVisualStyleBackColor = true;
+            // 
+            // dataGridView2
+            // 
+            this.dataGridView2.AllowUserToAddRows = false;
+            this.dataGridView2.AllowUserToDeleteRows = false;
+            this.dataGridView2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView2.Location = new System.Drawing.Point(311, 402);
+            this.dataGridView2.MultiSelect = false;
+            this.dataGridView2.Name = "dataGridView2";
+            this.dataGridView2.Size = new System.Drawing.Size(714, 79);
+            this.dataGridView2.TabIndex = 16;
             // 
             // InputDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1057, 567);
+            this.Controls.Add(this.dataGridView2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.btnImport);
             this.Controls.Add(this.btnSve);
@@ -180,6 +194,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -198,5 +213,6 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.RadioButton radioButton2;
         private System.Windows.Forms.RadioButton radioButton1;
+        private System.Windows.Forms.DataGridView dataGridView2;
     }
 }

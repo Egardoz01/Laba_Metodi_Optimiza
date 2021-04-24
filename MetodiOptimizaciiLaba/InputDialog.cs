@@ -48,6 +48,7 @@ namespace MetodiOptimizaciiLaba
                 VariablesAmount.Value = before;
                 return;
             }
+            LoadBasicSolutionGrid(now);
             if (now > before)
             {
                 dataGridView1.Columns.Add("", "");
@@ -235,21 +236,51 @@ namespace MetodiOptimizaciiLaba
             if (!sm.ValidateInput())
                 return;
 
-            var form = new InsertBasicSolution(sm.nVars);
-            form.ShowDialog();
-            if (form.solution != null)
+
+            try
             {
+                sm.SetBasicSolution(GetBasicSolution());
+                sm.CountTable();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+
+            
+        }
+
+        private void LoadBasicSolutionGrid(int var_num)
+        {
+            dataGridView2.Columns.Clear();
+            dataGridView2.Rows.Clear();
+            string[] ar = new string[var_num];
+            for (int i = 0; i < var_num; i++)
+                dataGridView2.Columns.Add("", "");
+            for (int i = 1; i <= var_num; i++)
+                ar[i - 1] = "X" + i;
+            dataGridView2.Rows.Add(ar);
+            dataGridView2.Rows.Add();
+        }
+
+        private Rational[] GetBasicSolution()
+        {
+            int var_num = dataGridView2.Columns.Count;
+            Rational[]  solution = new Rational[var_num];
+            for (int i = 0; i < var_num; i++)
+            {
+                string s = dataGridView1.Rows[1].Cells[i].Value as string;
                 try
                 {
-                    sm.SetBasicSolution(form.solution);
-                    sm.CountTable();
+                    solution[i] = s.ParseRational();
                 }
                 catch (Exception ex)
                 {
-                    MessageBox.Show(ex.Message);
+                    MessageBox.Show("Неверный вормат ввода " + s);
+                    return null;
                 }
-
             }
+            return solution;
         }
     }
         
