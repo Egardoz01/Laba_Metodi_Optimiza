@@ -21,7 +21,9 @@ namespace MetodiOptimizaciiLaba
         private void btnInput_Click(object sender, EventArgs e)
         {
             InputDialog form = new InputDialog();
-            form.Show();
+            this.Hide();
+            form.ShowDialog();
+            this.Show();
         }
     }
 }

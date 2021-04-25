@@ -131,5 +131,14 @@ namespace MetodiOptimizaciiLaba
                 SimplexTable.Rows[0].Cells[i].Style.BackColor = Color.LightGray;
 
         }
+
+        public SimplexMethod GetLastTable()
+        {
+            return steps[nSteps];
+        }
+        public bool isFinal()
+        {
+            return steps[nSteps].GetAvailableOporniyElements().Count == 0;
+        }
     }
 }

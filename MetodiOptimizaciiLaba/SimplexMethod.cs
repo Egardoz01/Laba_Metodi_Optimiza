@@ -326,5 +326,68 @@ namespace MetodiOptimizaciiLaba
             basisVariables[row] = tmp;
             NStep++;
         }
+
+        public SimplexMethod GenerateArtificialBasisTask()
+        {
+            int nVars = this.nVars+this.nRestrs;
+            int nRestrs = this.nRestrs;
+            Rational[] f = new Rational[nVars+1];
+            Rational[,] r = new Rational[nRestrs,nVars+1];
+
+            for (int i = 0; i < nVars; i++)
+            {
+                if (i >= this.nVars)
+                    f[i] = 1;
+            }
+            for (int i = 0; i < this.nRestrs; i++)
+                for (int j = 0; j <this.nVars; j++)
+                    r[i, j] = restrs[i, j];
+            
+            for (int i = 0; i < nRestrs; i++)
+                r[i, i + this.nVars] = 1;
+
+            for (int i = 0; i < nRestrs; i++)
+                r[i, nVars] = restrs[i, this.nVars];
+
+            SimplexMethod sm = new SimplexMethod(f,r);
+            Rational[] sol = new Rational[nVars];
+            for (int i = 0; i < nRestrs; i++)
+                sol[this.nVars + i] = r[i,nVars];
+
+            sm.SetBasicSolution(sol);
+            return sm;
+        }
+
+        public SimplexMethod GeterateRestrsAfterBasis(Rational[] f)
+        {
+            int nVars = this.nVars - this.nRestrs;
+            int nRestrs = this.nRestrs;
+            Rational[,] r = new Rational[nRestrs, nVars + 1];
+            for (int j = 0; j < freeVariables.Count; j++)
+            {
+                if (freeVariables[j] <= nVars)
+                {
+                    for (int i = 0; i < nRestrs; i++)
+                    {
+                        r[i, freeVariables[j]-1] = table[i, j];
+                    }
+                }
+            }
+
+            for (int i = 0; i < basisVariables.Count; i++)
+                r[i, basisVariables[i]-1] = 1;
+
+            Rational[] sol = new Rational[nVars];
+            for (int i = 0; i < nRestrs; i++)
+            {
+                sol[basisVariables[i]-1] = table[i, nVars];
+                r[i, nVars] = table[i, nVars];
+            }
+
+            SimplexMethod sm = new SimplexMethod(f, r);
+            sm.SetBasicSolution(sol);
+
+            return sm;
+        }
     }
 }

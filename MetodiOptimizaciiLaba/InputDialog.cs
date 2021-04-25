@@ -214,16 +214,10 @@ namespace MetodiOptimizaciiLaba
             }
         }
 
-
-        private SimplexMethod parseInput()
+        private Rational[] paseFunction()
         {
-
             int vars_amount = dataGridView1.ColumnCount - 2;
-            int restrs_amount = dataGridView1.RowCount - 3;
-            Rational[] f = new Rational[vars_amount +1];
-
-            Rational[,] restrs = new Rational[restrs_amount, vars_amount+1];
-
+            Rational[] f = new Rational[vars_amount + 1];
             for (int i = 1; i < dataGridView1.Columns.Count; i++)
             {
                 string s = (string)dataGridView1.Rows[1].Cells[i].Value;
@@ -236,7 +230,19 @@ namespace MetodiOptimizaciiLaba
                     MessageBox.Show("Неверный формат ввода ", s);
                     return null;
                 }
+
             }
+            return f;
+        }
+
+        private SimplexMethod parseInput()
+        {
+
+            int vars_amount = dataGridView1.ColumnCount - 2;
+            int restrs_amount = dataGridView1.RowCount - 3;
+            Rational[] f = paseFunction();
+
+            Rational[,] restrs = new Rational[restrs_amount, vars_amount+1];
 
             for (int i = 3; i < dataGridView1.Rows.Count; i++)
             {
@@ -270,10 +276,36 @@ namespace MetodiOptimizaciiLaba
 
             try
             {
-                sm.SetBasicSolution(GetBasicSolution());
-                sm.CountTable();
-                SimplexMethodForm form = new SimplexMethodForm(sm);
-                form.ShowDialog();
+                if (rbSolutionMethod.Checked)
+                {
+                    sm.SetBasicSolution(GetBasicSolution());
+                    sm.CountTable();
+                    SimplexMethodForm form = new SimplexMethodForm(sm);
+                    this.Hide();
+                    form.ShowDialog();
+                    this.Show();
+                }
+                else
+                {
+                    SimplexMethod basisTask =  sm.GenerateArtificialBasisTask();
+
+                    basisTask.CountTable();
+                    SimplexMethodForm form = new SimplexMethodForm(basisTask);
+                    this.Hide();
+                    form.ShowDialog();
+                    this.Show();
+
+                    if (form.isFinal())
+                    {
+                        SimplexMethod smTask = form.GetLastTable().GeterateRestrsAfterBasis(paseFunction());
+                        smTask.CountTable();
+                        SimplexMethodForm form2 = new SimplexMethodForm(smTask);
+                        this.Hide();
+                        form2.ShowDialog();
+                        this.Show();
+                    }
+
+                }
             }
             catch (Exception ex)
             {
@@ -314,6 +346,12 @@ namespace MetodiOptimizaciiLaba
                 }
             }
             return solution;
+        }
+
+        private void BasicSolutionRadioButton_CheckedChanged(object sender, EventArgs e)
+        {
+            dataGridView2.Visible = rbSolutionMethod.Checked;
+
         }
     }
         

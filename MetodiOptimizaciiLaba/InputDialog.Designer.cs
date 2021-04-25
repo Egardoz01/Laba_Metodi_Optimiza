@@ -37,8 +37,8 @@
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.btnSolve = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.radioButton2 = new System.Windows.Forms.RadioButton();
-            this.radioButton1 = new System.Windows.Forms.RadioButton();
+            this.rbSolutionMethod = new System.Windows.Forms.RadioButton();
+            this.rbBasisMethod = new System.Windows.Forms.RadioButton();
             this.dataGridView2 = new System.Windows.Forms.DataGridView();
             ((System.ComponentModel.ISupportInitialize)(this.RestrAmount)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.VariablesAmount)).BeginInit();
@@ -121,7 +121,8 @@
             // 
             // btnSolve
             // 
-            this.btnSolve.Location = new System.Drawing.Point(35, 78);
+            this.btnSolve.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnSolve.Location = new System.Drawing.Point(29, 80);
             this.btnSolve.Name = "btnSolve";
             this.btnSolve.Size = new System.Drawing.Size(111, 41);
             this.btnSolve.TabIndex = 14;
@@ -131,36 +132,42 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.radioButton2);
-            this.groupBox1.Controls.Add(this.radioButton1);
+            this.groupBox1.Controls.Add(this.rbSolutionMethod);
+            this.groupBox1.Controls.Add(this.rbBasisMethod);
             this.groupBox1.Controls.Add(this.btnSolve);
+            this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox1.Location = new System.Drawing.Point(12, 345);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(278, 136);
             this.groupBox1.TabIndex = 15;
             this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "Симплекс метод";
             // 
-            // radioButton2
+            // rbSolutionMethod
             // 
-            this.radioButton2.AutoSize = true;
-            this.radioButton2.Checked = true;
-            this.radioButton2.Location = new System.Drawing.Point(35, 42);
-            this.radioButton2.Name = "radioButton2";
-            this.radioButton2.Size = new System.Drawing.Size(196, 17);
-            this.radioButton2.TabIndex = 16;
-            this.radioButton2.TabStop = true;
-            this.radioButton2.Text = "Заданные базисные переменные";
-            this.radioButton2.UseVisualStyleBackColor = true;
+            this.rbSolutionMethod.AutoSize = true;
+            this.rbSolutionMethod.Checked = true;
+            this.rbSolutionMethod.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rbSolutionMethod.Location = new System.Drawing.Point(29, 44);
+            this.rbSolutionMethod.Name = "rbSolutionMethod";
+            this.rbSolutionMethod.Size = new System.Drawing.Size(196, 17);
+            this.rbSolutionMethod.TabIndex = 16;
+            this.rbSolutionMethod.TabStop = true;
+            this.rbSolutionMethod.Text = "Заданные базисные переменные";
+            this.rbSolutionMethod.UseVisualStyleBackColor = true;
+            this.rbSolutionMethod.CheckedChanged += new System.EventHandler(this.BasicSolutionRadioButton_CheckedChanged);
             // 
-            // radioButton1
+            // rbBasisMethod
             // 
-            this.radioButton1.AutoSize = true;
-            this.radioButton1.Location = new System.Drawing.Point(35, 19);
-            this.radioButton1.Name = "radioButton1";
-            this.radioButton1.Size = new System.Drawing.Size(180, 17);
-            this.radioButton1.TabIndex = 15;
-            this.radioButton1.Text = "Метод искусственного базиса";
-            this.radioButton1.UseVisualStyleBackColor = true;
+            this.rbBasisMethod.AutoSize = true;
+            this.rbBasisMethod.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rbBasisMethod.Location = new System.Drawing.Point(29, 21);
+            this.rbBasisMethod.Name = "rbBasisMethod";
+            this.rbBasisMethod.Size = new System.Drawing.Size(180, 17);
+            this.rbBasisMethod.TabIndex = 15;
+            this.rbBasisMethod.Text = "Метод искусственного базиса";
+            this.rbBasisMethod.UseVisualStyleBackColor = true;
+            this.rbBasisMethod.CheckedChanged += new System.EventHandler(this.BasicSolutionRadioButton_CheckedChanged);
             // 
             // dataGridView2
             // 
@@ -211,8 +218,8 @@
         private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.Button btnSolve;
         private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.RadioButton radioButton2;
-        private System.Windows.Forms.RadioButton radioButton1;
+        private System.Windows.Forms.RadioButton rbSolutionMethod;
+        private System.Windows.Forms.RadioButton rbBasisMethod;
         private System.Windows.Forms.DataGridView dataGridView2;
     }
 }
