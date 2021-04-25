@@ -116,7 +116,7 @@
             this.dataGridView1.Location = new System.Drawing.Point(311, 25);
             this.dataGridView1.MultiSelect = false;
             this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(714, 347);
+            this.dataGridView1.Size = new System.Drawing.Size(848, 347);
             this.dataGridView1.TabIndex = 7;
             // 
             // btnSolve
@@ -170,14 +170,14 @@
             this.dataGridView2.Location = new System.Drawing.Point(311, 402);
             this.dataGridView2.MultiSelect = false;
             this.dataGridView2.Name = "dataGridView2";
-            this.dataGridView2.Size = new System.Drawing.Size(714, 79);
+            this.dataGridView2.Size = new System.Drawing.Size(848, 79);
             this.dataGridView2.TabIndex = 16;
             // 
             // InputDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1057, 567);
+            this.ClientSize = new System.Drawing.Size(1171, 567);
             this.Controls.Add(this.dataGridView2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.btnImport);

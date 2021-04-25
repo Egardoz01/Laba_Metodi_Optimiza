@@ -53,6 +53,7 @@ namespace MetodiOptimizaciiLaba
             {
                 dataGridView1.Columns.Add("", "");
 
+
                 for (int i = 1; i < dataGridView1.Rows.Count; i++)
                 {
                     dataGridView1.Rows[i].Cells[now + 1].Value = dataGridView1.Rows[i].Cells[now].Value;
@@ -77,6 +78,32 @@ namespace MetodiOptimizaciiLaba
                     dataGridView1.Rows[2].Cells[now].Value = "a" + now;
                 dataGridView1.Rows[2].Cells[now + 1].Value = "b";
             }
+
+            setStyle();
+
+        }
+
+
+        private void setStyle()
+        {
+            for (int i = 0; i < dataGridView1.ColumnCount; i++)
+                dataGridView1.Columns[i].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+
+            for (int i = 0; i < dataGridView2.ColumnCount; i++)
+                dataGridView2.Columns[i].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+
+            for (int i = 0; i < dataGridView1.RowCount; i++)
+                dataGridView1.Rows[i].Cells[0].Style.BackColor = Color.LightGray;
+
+            for (int i = 0; i < dataGridView1.ColumnCount; i++)
+                dataGridView1.Rows[0].Cells[i].Style.BackColor = Color.LightGray;
+
+            for (int i = 0; i < dataGridView1.ColumnCount; i++)
+                dataGridView1.Rows[2].Cells[i].Style.BackColor = Color.LightGray;
+
+            for (int i = 0; i < dataGridView2.ColumnCount; i++)
+                dataGridView2.Rows[0].Cells[i].Style.BackColor = Color.LightGray;
+
         }
 
         private void RestrAmount_ValueChanged(object sender, EventArgs e)
@@ -100,6 +127,8 @@ namespace MetodiOptimizaciiLaba
             {
                 dataGridView1.Rows.RemoveAt(dataGridView1.Rows.Count - 1);
             }
+
+            setStyle();
         }
 
         private bool ValidateVariablesAmount()
@@ -177,6 +206,7 @@ namespace MetodiOptimizaciiLaba
                     RestrAmount.Value = dataGridView1.RowCount - 3;
                     change_value = true;
                     LoadBasicSolutionGrid((int)VariablesAmount.Value);
+                    setStyle();
                 }
 
 

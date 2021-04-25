@@ -62,6 +62,7 @@ namespace MetodiOptimizaciiLaba
             }
 
             DrawOporniyElements();
+            setStyle();
         }
 
         private void DrawOporniyElements()
@@ -115,6 +116,20 @@ namespace MetodiOptimizaciiLaba
             curStep--;
             DrawCurStep();
             CheckButtonsState();
+        }
+
+
+        private void setStyle()
+        {
+            for (int i = 0; i < SimplexTable.ColumnCount; i++)
+               SimplexTable.Columns[i].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+
+            for (int i = 0; i < SimplexTable.RowCount; i++)
+                SimplexTable.Rows[i].Cells[0].Style.BackColor = Color.LightGray;
+
+            for (int i = 0; i < SimplexTable.ColumnCount; i++)
+                SimplexTable.Rows[0].Cells[i].Style.BackColor = Color.LightGray;
+
         }
     }
 }

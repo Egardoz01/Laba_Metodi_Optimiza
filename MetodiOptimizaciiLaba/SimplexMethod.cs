@@ -149,12 +149,14 @@ namespace MetodiOptimizaciiLaba
             {
 
                 int c2 = basisVariables[c1] - 1;
-
-                for (int i = 0; i < nRestrs; i++)
+                for (int c = c2 - 1; c >= c1; c--)
                 {
-                    Rational tmp = matrix[i,c1];
-                    matrix[i, c1] = matrix[i, c2];
-                    matrix[i, c2] = tmp;
+                    for (int i = 0; i < nRestrs; i++)
+                    {
+                        Rational tmp = matrix[i, c];
+                        matrix[i, c] = matrix[i, c+1];
+                        matrix[i, c+1] = tmp;
+                    }
                 }
             }
 
