@@ -21,7 +21,7 @@ namespace MetodiOptimizaciiLaba
         {
             InitializeComponent();
             InputFormInit();
-           
+        
         }
         private bool change_value = true;
 
@@ -35,6 +35,7 @@ namespace MetodiOptimizaciiLaba
             dataGridView1.Rows.Add("f(x)", "0");
             dataGridView1.Rows.Add("", "b");
             dataGridView1.Rows[2].ReadOnly = true;
+            setStyle();
         }
 
         private void VariablesAmount_ValueChanged(object sender, EventArgs e)
@@ -104,6 +105,8 @@ namespace MetodiOptimizaciiLaba
             for (int i = 0; i < dataGridView2.ColumnCount; i++)
                 dataGridView2.Rows[0].Cells[i].Style.BackColor = Color.LightGray;
 
+            dataGridView1.ClearSelection();
+            dataGridView2.ClearSelection();
         }
 
         private void RestrAmount_ValueChanged(object sender, EventArgs e)

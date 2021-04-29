@@ -15,6 +15,7 @@ namespace MetodiOptimizaciiLaba
         private List<SimplexMethod> steps;
         private int nSteps;
         private int curStep;
+      
         public SimplexMethodForm(SimplexMethod sm)
         {
             InitializeComponent();
@@ -22,6 +23,7 @@ namespace MetodiOptimizaciiLaba
             curStep = 0;
             steps = new List<SimplexMethod>();
             steps.Add(sm);
+            
         }
 
         private void SimplexMethodForm_Load(object sender, EventArgs e)
@@ -61,8 +63,10 @@ namespace MetodiOptimizaciiLaba
                 SimplexTable.Rows.Add(r.ToArray());
             }
 
+            SimplexTable.ClearSelection();
             DrawOporniyElements();
             setStyle();
+            WriteSolution();
         }
 
         private void DrawOporniyElements()
@@ -73,6 +77,8 @@ namespace MetodiOptimizaciiLaba
             {
                 SimplexTable.Rows[el.X + 1].Cells[el.Y + 1].Style.BackColor = Color.Green;
             }
+            if (steps[curStep].OporniyElement != new Point(-1, -1))
+                SimplexTable.Rows[steps[curStep].OporniyElement.X + 1].Cells[steps[curStep].OporniyElement.Y + 1].Style.BackColor = Color.Aqua;
         }
 
         private void SimplexTable_CellClick(object sender, DataGridViewCellEventArgs e)
@@ -88,11 +94,13 @@ namespace MetodiOptimizaciiLaba
                 }
 
                 steps.Add(new SimplexMethod(steps[nSteps]));
+                steps[nSteps].OporniyElement = p;
                 nSteps++;
                 curStep++;
                 steps[nSteps].MakeStep(p);
                 DrawCurStep();
                 CheckButtonsState();
+
             }
         }
 
@@ -101,6 +109,23 @@ namespace MetodiOptimizaciiLaba
             btnNextStep.Enabled = (curStep != nSteps);
 
             btnPrevStep.Enabled = curStep != 0;
+        }
+
+        private void WriteSolution()
+        {
+            lblF.Text = "F*(X)=" + steps[nSteps].GetFmin().ToString();
+            lblX.Text = "X*=(";
+            var v = steps[nSteps].GetSolution();
+            for (int i = 0; i < v.Length; i++)
+            {
+
+                lblX.Text += v[i];
+                if (i != v.Length - 1)
+                    lblX.Text += ",";
+                else
+                    lblX.Text += ")";
+
+            }
         }
 
         private void btnNextStep_Click(object sender, EventArgs e)
@@ -122,7 +147,7 @@ namespace MetodiOptimizaciiLaba
         private void setStyle()
         {
             for (int i = 0; i < SimplexTable.ColumnCount; i++)
-               SimplexTable.Columns[i].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
+                SimplexTable.Columns[i].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
 
             for (int i = 0; i < SimplexTable.RowCount; i++)
                 SimplexTable.Rows[i].Cells[0].Style.BackColor = Color.LightGray;
@@ -139,6 +164,15 @@ namespace MetodiOptimizaciiLaba
         public bool isFinal()
         {
             return steps[nSteps].GetAvailableOporniyElements().Count == 0;
+        }
+
+        private void btnMakeStepCurrent_Click(object sender, EventArgs e)
+        {
+            while (nSteps != curStep)
+            {
+                steps.RemoveAt(nSteps);
+                nSteps--;
+            }
         }
     }
 }

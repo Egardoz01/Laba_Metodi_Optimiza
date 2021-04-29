@@ -20,7 +20,7 @@ namespace MetodiOptimizaciiLaba
         public int nRestrs;
         public List<int> basisVariables;
         public List<int> freeVariables;
-
+        public Point OporniyElement = new Point(-1, -1);
 
         public SimplexMethod(SimplexMethod sm)
         {
@@ -116,7 +116,7 @@ namespace MetodiOptimizaciiLaba
 
             if (solution.Length != nVars)
                 throw new Exception("Решение не соответствует количеству переменных");
-           
+
             basisVariables = new List<int>();
             freeVariables = new List<int>();
             for (int i = 0; i < nVars; i++)
@@ -140,8 +140,8 @@ namespace MetodiOptimizaciiLaba
         }
 
         public void CountTable()
-        {  
-            table = new Rational[basisVariables.Count+1, freeVariables.Count+1];
+        {
+            table = new Rational[basisVariables.Count + 1, freeVariables.Count + 1];
 
             Rational[,] matrix = restrs.Clone() as Rational[,];
 
@@ -154,8 +154,8 @@ namespace MetodiOptimizaciiLaba
                     for (int i = 0; i < nRestrs; i++)
                     {
                         Rational tmp = matrix[i, c];
-                        matrix[i, c] = matrix[i, c+1];
-                        matrix[i, c+1] = tmp;
+                        matrix[i, c] = matrix[i, c + 1];
+                        matrix[i, c + 1] = tmp;
                     }
                 }
             }
@@ -227,12 +227,12 @@ namespace MetodiOptimizaciiLaba
             {
                 for (int j = 0; j < nFree; j++)
                 {
-                    table[i,j] = matrix[i,j + nBasis];
+                    table[i, j] = matrix[i, j + nBasis];
                 }
             }
             for (int i = 0; i < nBasis; i++)
             {
-                table[i,nFree] = matrix[i, nFree + nBasis];
+                table[i, nFree] = matrix[i, nFree + nBasis];
             }
 
             for (int i = 0; i < nFree; i++)
@@ -249,7 +249,7 @@ namespace MetodiOptimizaciiLaba
                 sum += f[i] * solution[i];
 
             table[nBasis, nFree] = -sum;
-            
+
             int a = 0;
         }
 
@@ -263,19 +263,19 @@ namespace MetodiOptimizaciiLaba
                 if (table[last, i] < 0)
                 {
                     int oporniy = -1;
-                    Rational otn =0;
+                    Rational otn = 0;
                     for (int j = 0; j < last; j++)
                     {
                         if (table[j, i] > 0)
                         {
                             oporniy = j;
-                            otn =  table[j,freeVariables.Count]/ table[j, i];
+                            otn = table[j, freeVariables.Count] / table[j, i];
                             break;
                         }
                     }
                     if (oporniy == -1)
                         continue;
-                    for (int j = oporniy+1; j < last; j++)
+                    for (int j = oporniy + 1; j < last; j++)
                     {
                         if (table[j, i] > 0)
                         {
@@ -295,27 +295,28 @@ namespace MetodiOptimizaciiLaba
 
         public void MakeStep(Point element)
         {
-            Rational[,] nextTable = new Rational[table.GetLength(0),table.GetLength(1)];
+ 
+            Rational[,] nextTable = new Rational[table.GetLength(0), table.GetLength(1)];
             int row = element.X;
             int col = element.Y;
 
             nextTable[row, col] = 1 / table[row, col];
 
-            for (int i = 0; i <=freeVariables.Count; i++)
+            for (int i = 0; i <= freeVariables.Count; i++)
                 nextTable[row, i] = table[row, i] / table[row, col];
 
-            for (int i = 0; i <=basisVariables.Count; i++)
+            for (int i = 0; i <= basisVariables.Count; i++)
             {
                 if (i == row)
                     continue;
-                for (int j = 0; j <=freeVariables.Count; j++)
+                for (int j = 0; j <= freeVariables.Count; j++)
                 {
                     nextTable[i, j] = table[i, j] - table[i, col] * nextTable[row, j];
                 }
             }
-            
 
-            for (int i = 0; i <=basisVariables.Count; i++)
+
+            for (int i = 0; i <= basisVariables.Count; i++)
                 nextTable[i, col] = -table[i, col] / table[row, col];
 
             nextTable[row, col] = 1 / table[row, col];
@@ -329,10 +330,10 @@ namespace MetodiOptimizaciiLaba
 
         public SimplexMethod GenerateArtificialBasisTask()
         {
-            int nVars = this.nVars+this.nRestrs;
+            int nVars = this.nVars + this.nRestrs;
             int nRestrs = this.nRestrs;
-            Rational[] f = new Rational[nVars+1];
-            Rational[,] r = new Rational[nRestrs,nVars+1];
+            Rational[] f = new Rational[nVars + 1];
+            Rational[,] r = new Rational[nRestrs, nVars + 1];
 
             for (int i = 0; i < nVars; i++)
             {
@@ -340,19 +341,19 @@ namespace MetodiOptimizaciiLaba
                     f[i] = 1;
             }
             for (int i = 0; i < this.nRestrs; i++)
-                for (int j = 0; j <this.nVars; j++)
+                for (int j = 0; j < this.nVars; j++)
                     r[i, j] = restrs[i, j];
-            
+
             for (int i = 0; i < nRestrs; i++)
                 r[i, i + this.nVars] = 1;
 
             for (int i = 0; i < nRestrs; i++)
                 r[i, nVars] = restrs[i, this.nVars];
 
-            SimplexMethod sm = new SimplexMethod(f,r);
+            SimplexMethod sm = new SimplexMethod(f, r);
             Rational[] sol = new Rational[nVars];
             for (int i = 0; i < nRestrs; i++)
-                sol[this.nVars + i] = r[i,nVars];
+                sol[this.nVars + i] = r[i, nVars];
 
             sm.SetBasicSolution(sol);
             return sm;
@@ -369,18 +370,18 @@ namespace MetodiOptimizaciiLaba
                 {
                     for (int i = 0; i < nRestrs; i++)
                     {
-                        r[i, freeVariables[j]-1] = table[i, j];
+                        r[i, freeVariables[j] - 1] = table[i, j];
                     }
                 }
             }
 
             for (int i = 0; i < basisVariables.Count; i++)
-                r[i, basisVariables[i]-1] = 1;
+                r[i, basisVariables[i] - 1] = 1;
 
             Rational[] sol = new Rational[nVars];
             for (int i = 0; i < nRestrs; i++)
             {
-                sol[basisVariables[i]-1] = table[i, nVars];
+                sol[basisVariables[i] - 1] = table[i, nVars];
                 r[i, nVars] = table[i, nVars];
             }
 
@@ -388,6 +389,24 @@ namespace MetodiOptimizaciiLaba
             sm.SetBasicSolution(sol);
 
             return sm;
+        }
+
+        public Rational GetFmin()
+        {
+            return -table[basisVariables.Count, freeVariables.Count];
+        }
+
+        public Rational[] GetSolution()
+        {
+            Rational[] v = new Rational[nVars];
+
+            for (int i = 0; i < freeVariables.Count; i++)
+                v[freeVariables[i]-1] = 0;
+
+            for (int i = 0; i < basisVariables.Count; i++)
+                v[basisVariables[i] - 1] = table[i, freeVariables.Count];
+
+            return v;
         }
     }
 }
