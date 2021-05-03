@@ -15,15 +15,30 @@ namespace MetodiOptimizaciiLaba
         private List<SimplexMethod> steps;
         private int nSteps;
         private int curStep;
-      
-        public SimplexMethodForm(SimplexMethod sm)
+        private bool basisMethod;
+        private bool autoSteps;
+        public SimplexMethodForm(SimplexMethod sm, bool autoSteps, bool basisMethod = false)
         {
             InitializeComponent();
             nSteps = 0;
             curStep = 0;
             steps = new List<SimplexMethod>();
             steps.Add(sm);
-            
+            this.basisMethod = basisMethod;
+            if (basisMethod)
+                btnFinish.Text = "Продолжить решение с данным базисным решением";
+
+            this.autoSteps = autoSteps;
+
+            if (autoSteps)
+                doAuto();
+        }
+
+        private void doAuto()
+        {
+            while (steps[curStep].GetAvailableOporniyElements().Count != 0)
+                makeStep(steps[curStep].GetAvailableOporniyElements()[0]);
+
         }
 
         private void SimplexMethodForm_Load(object sender, EventArgs e)
@@ -92,16 +107,18 @@ namespace MetodiOptimizaciiLaba
                     MessageBox.Show("Опорный элемент выбран неправильно");
                     return;
                 }
-
-                steps.Add(new SimplexMethod(steps[nSteps]));
-                steps[nSteps].OporniyElement = p;
-                nSteps++;
-                curStep++;
-                steps[nSteps].MakeStep(p);
-                DrawCurStep();
-                CheckButtonsState();
-
             }
+        }
+
+        private void makeStep(Point p)
+        {
+            steps.Add(new SimplexMethod(steps[nSteps]));
+            steps[nSteps].OporniyElement = p;
+            nSteps++;
+            curStep++;
+            steps[nSteps].MakeStep(p);
+            DrawCurStep();
+            CheckButtonsState();
         }
 
         private void CheckButtonsState()
@@ -109,6 +126,12 @@ namespace MetodiOptimizaciiLaba
             btnNextStep.Enabled = (curStep != nSteps);
 
             btnPrevStep.Enabled = curStep != 0;
+
+            if (isFinal())
+                btnFinish.Enabled = true;
+
+            btnMakeStepCurrent.Enabled = curStep != nSteps;
+
         }
 
         private void WriteSolution()
@@ -173,6 +196,17 @@ namespace MetodiOptimizaciiLaba
                 steps.RemoveAt(nSteps);
                 nSteps--;
             }
+        }
+
+        private void label2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnFinish_Click(object sender, EventArgs e)
+        {
+            DialogResult = DialogResult.OK;
+            Close();
         }
     }
 }

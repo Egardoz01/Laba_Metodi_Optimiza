@@ -40,6 +40,7 @@
             this.rbSolutionMethod = new System.Windows.Forms.RadioButton();
             this.rbBasisMethod = new System.Windows.Forms.RadioButton();
             this.dataGridView2 = new System.Windows.Forms.DataGridView();
+            this.cbAutoSteps = new System.Windows.Forms.CheckBox();
             ((System.ComponentModel.ISupportInitialize)(this.RestrAmount)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.VariablesAmount)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
@@ -122,7 +123,7 @@
             // btnSolve
             // 
             this.btnSolve.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnSolve.Location = new System.Drawing.Point(29, 80);
+            this.btnSolve.Location = new System.Drawing.Point(70, 456);
             this.btnSolve.Name = "btnSolve";
             this.btnSolve.Size = new System.Drawing.Size(111, 41);
             this.btnSolve.TabIndex = 14;
@@ -132,13 +133,13 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.cbAutoSteps);
             this.groupBox1.Controls.Add(this.rbSolutionMethod);
             this.groupBox1.Controls.Add(this.rbBasisMethod);
-            this.groupBox1.Controls.Add(this.btnSolve);
             this.groupBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox1.Location = new System.Drawing.Point(12, 345);
+            this.groupBox1.Location = new System.Drawing.Point(12, 310);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(278, 136);
+            this.groupBox1.Size = new System.Drawing.Size(278, 115);
             this.groupBox1.TabIndex = 15;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Симплекс метод";
@@ -180,6 +181,16 @@
             this.dataGridView2.Size = new System.Drawing.Size(848, 79);
             this.dataGridView2.TabIndex = 16;
             // 
+            // cbAutoSteps
+            // 
+            this.cbAutoSteps.AutoSize = true;
+            this.cbAutoSteps.Location = new System.Drawing.Point(29, 78);
+            this.cbAutoSteps.Name = "cbAutoSteps";
+            this.cbAutoSteps.Size = new System.Drawing.Size(179, 20);
+            this.cbAutoSteps.TabIndex = 17;
+            this.cbAutoSteps.Text = "Решать автоматически";
+            this.cbAutoSteps.UseVisualStyleBackColor = true;
+            // 
             // InputDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -187,6 +198,7 @@
             this.ClientSize = new System.Drawing.Size(1171, 567);
             this.Controls.Add(this.dataGridView2);
             this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.btnSolve);
             this.Controls.Add(this.btnImport);
             this.Controls.Add(this.btnSve);
             this.Controls.Add(this.label2);
@@ -221,5 +233,6 @@
         private System.Windows.Forms.RadioButton rbSolutionMethod;
         private System.Windows.Forms.RadioButton rbBasisMethod;
         private System.Windows.Forms.DataGridView dataGridView2;
+        private System.Windows.Forms.CheckBox cbAutoSteps;
     }
 }

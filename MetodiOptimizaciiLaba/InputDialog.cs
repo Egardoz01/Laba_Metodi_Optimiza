@@ -275,7 +275,7 @@ namespace MetodiOptimizaciiLaba
             SimplexMethod sm = parseInput();
             if (!sm.ValidateInput())
                 return;
-
+            bool autoSteps = cbAutoSteps.Checked;
 
             try
             {
@@ -283,7 +283,7 @@ namespace MetodiOptimizaciiLaba
                 {
                     sm.SetBasicSolution(GetBasicSolution());
                     sm.CountTable();
-                    SimplexMethodForm form = new SimplexMethodForm(sm);
+                    SimplexMethodForm form = new SimplexMethodForm(sm, autoSteps);
                     this.Hide();
                     form.ShowDialog();
                     this.Show();
@@ -293,7 +293,7 @@ namespace MetodiOptimizaciiLaba
                     SimplexMethod basisTask =  sm.GenerateArtificialBasisTask();
 
                     basisTask.CountTable();
-                    SimplexMethodForm form = new SimplexMethodForm(basisTask);
+                    SimplexMethodForm form = new SimplexMethodForm(basisTask, autoSteps, true);
                     this.Hide();
                     form.ShowDialog();
                     this.Show();
@@ -302,7 +302,7 @@ namespace MetodiOptimizaciiLaba
                     {
                         SimplexMethod smTask = form.GetLastTable().GeterateRestrsAfterBasis(paseFunction());
                         smTask.CountTable();
-                        SimplexMethodForm form2 = new SimplexMethodForm(smTask);
+                        SimplexMethodForm form2 = new SimplexMethodForm(smTask, autoSteps);
                         this.Hide();
                         form2.ShowDialog();
                         this.Show();
