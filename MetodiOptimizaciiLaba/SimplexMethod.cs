@@ -12,7 +12,7 @@ namespace MetodiOptimizaciiLaba
     public class SimplexMethod
     {
         private Rational[] f;
-        private Rational[,] restrs;
+        public Rational[,] restrs;
         public Rational[,] table;
         public Rational[] solution;
         public int NStep;
@@ -33,6 +33,15 @@ namespace MetodiOptimizaciiLaba
             solution = sm.solution.Clone() as Rational[];
             nVars = sm.nVars;
             nRestrs = sm.nRestrs;
+        }
+
+        public Rational CountRes(Rational[] point)
+        {
+            Rational sum = f[f.Length - 1];
+            for (int i = 0; i < point.Length; i++)
+                sum+=f[i] * point[i];
+            
+            return sum;
         }
 
         public SimplexMethod(Rational[] f, Rational[,] restrs)
@@ -139,10 +148,76 @@ namespace MetodiOptimizaciiLaba
             this.solution = solution.Clone() as Rational[];
         }
 
+        public Rational[,] CountGauss()
+        {
+            Rational[,] matrix = restrs.Clone() as Rational[,];
+            int num_rows = matrix.GetLength(0);
+            int num_cols = matrix.GetLength(1);
+
+            for (int cur_row = 0, cur_col = 0; cur_row < num_rows && cur_col < num_cols;)//пряиой ход
+            {
+                if (matrix[cur_row, cur_col].IsZero)
+                {
+                    for (int r2 = cur_row + 1; r2 < num_rows; r2++)
+                    {
+                        if (!matrix[r2, cur_col].IsZero)
+                        {
+                            for (int c = 0; c < num_cols; c++)
+                            {
+                                Rational tmp = matrix[cur_row, c];
+                                matrix[cur_row, c] = matrix[r2, c];
+                                matrix[r2, c] = tmp;
+                            }
+                            break;
+                        }
+                    }
+                }
+
+
+
+                if (!matrix[cur_row, cur_col].IsZero)
+                {
+                    Rational biba = matrix[cur_row, cur_col];
+                    for (int c = 0; c < num_cols; c++)
+                        matrix[cur_row, c] /= biba;
+
+                    for (int r2 = cur_row + 1; r2 < num_rows; r2++)
+                    {
+                        Rational factor = -matrix[r2, cur_col];
+                        for (int c = cur_row; c < num_cols; c++)
+                        {
+                            matrix[r2, c] = matrix[r2, c] + factor * matrix[cur_row, c];
+                        }
+                    }
+                    cur_row++;
+                    cur_col++;
+                }
+                else
+                {
+                    cur_col++;
+                }
+            }
+
+            for (int cur_row = num_rows - 1; cur_row >= 0; cur_row--)//Обратный ход
+            {
+
+                for (int r2 = cur_row - 1; r2 >= 0; r2--)
+                {
+                    Rational factor = -matrix[r2, cur_row];
+                    for (int c = cur_row; c < num_cols; c++)
+                    {
+                        matrix[r2, c] = matrix[r2, c] + factor * matrix[cur_row, c];
+                    }
+                }
+            }
+
+            return matrix;
+        }
+
         public void CountTable()
         {
-            table = new Rational[basisVariables.Count + 1, freeVariables.Count + 1];
 
+            table = new Rational[basisVariables.Count + 1, freeVariables.Count + 1];
             Rational[,] matrix = restrs.Clone() as Rational[,];
 
             for (int c1 = 0; c1 < basisVariables.Count(); c1++)
@@ -220,6 +295,9 @@ namespace MetodiOptimizaciiLaba
                 }
             }
 
+     
+
+            
             int nFree = freeVariables.Count;
             int nBasis = basisVariables.Count;
 
@@ -245,12 +323,13 @@ namespace MetodiOptimizaciiLaba
             }
 
             Rational sum = f[nVars];
+          
+             
             for (int i = 0; i < nVars; i++)
                 sum += f[i] * solution[i];
-
+            
             table[nBasis, nFree] = -sum;
 
-            int a = 0;
         }
 
         public List<Point> GetAvailableOporniyElements()

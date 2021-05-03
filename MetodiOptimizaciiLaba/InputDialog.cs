@@ -36,6 +36,7 @@ namespace MetodiOptimizaciiLaba
             dataGridView1.Rows.Add("", "b");
             dataGridView1.Rows[2].ReadOnly = true;
             setStyle();
+            SetText();
         }
 
         private void VariablesAmount_ValueChanged(object sender, EventArgs e)
@@ -138,7 +139,7 @@ namespace MetodiOptimizaciiLaba
         {
             int variables = (int)VariablesAmount.Value;
             int restr = (int)RestrAmount.Value;
-            if (restr > variables)
+            if (!rbGraphicMethod.Checked && restr > variables)
             {
                 MessageBox.Show("Количество ограничений не может быть больше количества переменных");
                 return false;
@@ -279,35 +280,53 @@ namespace MetodiOptimizaciiLaba
 
             try
             {
-                if (rbSolutionMethod.Checked)
+                if (rbGraphicMethod.Checked)
                 {
-                    sm.SetBasicSolution(GetBasicSolution());
-                    sm.CountTable();
-                    SimplexMethodForm form = new SimplexMethodForm(sm, autoSteps);
+                    if (sm.nVars > 2)
+                    {
+                        MessageBox.Show("Данную задачу нельзя решить графически в 2д");
+                        return;
+                    }
+
+                    GraphicMethodForm form = new GraphicMethodForm(sm);
                     this.Hide();
                     form.ShowDialog();
                     this.Show();
                 }
                 else
                 {
-                    SimplexMethod basisTask =  sm.GenerateArtificialBasisTask();
 
-                    basisTask.CountTable();
-                    SimplexMethodForm form = new SimplexMethodForm(basisTask, autoSteps, true);
-                    this.Hide();
-                    form.ShowDialog();
-                    this.Show();
 
-                    if (form.isFinal())
+                    if (rbSolutionMethod.Checked)
                     {
-                        SimplexMethod smTask = form.GetLastTable().GeterateRestrsAfterBasis(paseFunction());
-                        smTask.CountTable();
-                        SimplexMethodForm form2 = new SimplexMethodForm(smTask, autoSteps);
+                        sm.SetBasicSolution(GetBasicSolution());
+                        sm.CountTable();
+                        SimplexMethodForm form = new SimplexMethodForm(sm, autoSteps);
                         this.Hide();
-                        form2.ShowDialog();
+                        form.ShowDialog();
                         this.Show();
                     }
+                    else
+                    {
+                        SimplexMethod basisTask = sm.GenerateArtificialBasisTask();
 
+                        basisTask.CountTable();
+                        SimplexMethodForm form = new SimplexMethodForm(basisTask, autoSteps, true);
+                        this.Hide();
+                        form.ShowDialog();
+                        this.Show();
+
+                        if (form.isFinal())
+                        {
+                            SimplexMethod smTask = form.GetLastTable().GeterateRestrsAfterBasis(paseFunction());
+                            smTask.CountTable();
+                            SimplexMethodForm form2 = new SimplexMethodForm(smTask, autoSteps);
+                            this.Hide();
+                            form2.ShowDialog();
+                            this.Show();
+                        }
+
+                    }
                 }
             }
             catch (Exception ex)
@@ -354,6 +373,23 @@ namespace MetodiOptimizaciiLaba
         private void BasicSolutionRadioButton_CheckedChanged(object sender, EventArgs e)
         {
             dataGridView2.Visible = rbSolutionMethod.Checked;
+
+            cbAutoSteps.Enabled = rbSolutionMethod.Checked || rbBasisMethod.Checked;
+            SetText();
+        }
+
+
+        private void SetText()
+        {
+            if (rbGraphicMethod.Checked)
+                lblExample.Text = "A11*X1 + A12*X2 + ... + A1n*Xn <= b1\n\rA21*X1 + A22*X2 + ... + A2n*Xn <= b2\n\rAm1*X1 + Am2*X2 + ... + Amn*Xn <= bm\n\r";
+            else
+                lblExample.Text = "A11*X1 + A12*X2 + ... + A1n*Xn = b1\n\rA21*X1 + A22*X2 + ... + A2n*Xn = b2\n\rAm1*X1 + Am2*X2 + ... + Amn*Xn = bm\n\r";
+
+        }
+
+        private void cbAutoSteps_CheckedChanged(object sender, EventArgs e)
+        {
 
         }
     }
