@@ -148,7 +148,7 @@ namespace MetodiOptimizaciiLaba
             this.solution = solution.Clone() as Rational[];
         }
 
-        public Rational[,] CountGauss()
+        public void CountGauss()
         {
             Rational[,] matrix = restrs.Clone() as Rational[,];
             int num_rows = matrix.GetLength(0);
@@ -211,7 +211,15 @@ namespace MetodiOptimizaciiLaba
                 }
             }
 
-            return matrix;
+            table = new Rational[nRestrs, 3];
+
+            int off = nRestrs;
+            for (int i = 0; i < nRestrs; i++)
+            {
+                table[i, 0] = matrix[i,off];
+                table[i, 1] = matrix[i, off+1];
+                table[i, 2] = matrix[i, off+2];
+            }
         }
 
         public void CountTable()

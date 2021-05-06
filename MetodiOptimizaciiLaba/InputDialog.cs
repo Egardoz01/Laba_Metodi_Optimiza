@@ -282,12 +282,13 @@ namespace MetodiOptimizaciiLaba
             {
                 if (rbGraphicMethod.Checked)
                 {
-                    if (sm.nVars > 2)
+                    if (sm.nVars-sm.nRestrs > 2)
                     {
                         MessageBox.Show("Данную задачу нельзя решить графически в 2д");
                         return;
                     }
 
+                    sm.CountGauss();
                     GraphicMethodForm form = new GraphicMethodForm(sm);
                     this.Hide();
                     form.ShowDialog();

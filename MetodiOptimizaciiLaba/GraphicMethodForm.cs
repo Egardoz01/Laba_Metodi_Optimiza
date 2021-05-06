@@ -17,6 +17,7 @@ namespace MetodiOptimizaciiLaba
         double scale = 10;// 10 пикселей это одна условная единица
         int interval = 5;
         Point start;
+        List<Color> colors = new List<Color>() { Color.Red, Color.Green, Color.Blue, Color.Pink, Color.Violet, Color.Brown, Color.Orange};
         public GraphicMethodForm(SimplexMethod sm)
         {
             InitializeComponent();
@@ -78,13 +79,14 @@ namespace MetodiOptimizaciiLaba
 
         private void DrawRestrs(Graphics g)
         {
-            Pen pen = new Pen(Color.Red);
+       
             for (int i = 0; i < sm.nRestrs; i++)
             {
+                Pen pen = new Pen(colors[i % colors.Count],2);
                 Rational a1, c1, b1;
-                a1 = sm.restrs[i, 0];
-                b1 = sm.restrs[i, 1];
-                c1 = sm.restrs[i, 2];
+                a1 = sm.table[i, 0];
+                b1 = sm.table[i, 1];
+                c1 = sm.table[i, 2];
                 if (a1.IsZero)
                 {
                     Rational y = c1 / b1;
@@ -99,8 +101,31 @@ namespace MetodiOptimizaciiLaba
                 {
                     Rational y = c1 / b1;
                     Rational x = c1 / a1;
-                    Point p1 = toPixel(0, y);
-                    Point p2 = toPixel(x, 0);
+                    Point p1, p2;
+                    if (y >= 0)
+                    {
+                        p1 = toPixel(0, y);
+                    }
+                    else
+                    {
+                        Rational x1 = x * 100;
+                        Rational y1 = -y * 100;
+
+                        p1 = toPixel(x1, y1);
+                    }
+
+                    if (x >= 0)
+                    {
+                        p2 = toPixel(x, 0);
+                    }
+                    else
+                    {
+                        Rational x1 = -x*100;
+                        Rational y1 = y*100;
+
+                        p2 = toPixel(x1, y1);
+
+                    }
                     g.DrawLine(pen, p1, p2);
                 }
             }
@@ -190,7 +215,38 @@ namespace MetodiOptimizaciiLaba
 
         private void GraphicMethodForm_Load(object sender, EventArgs e)
         {
+            List<Panel> panels = new List<Panel>();
+            List<Label> labels = new List<Label>();
+            panels.Add(panelRestr1);
+            labels.Add(LabelRestr1);
 
+            for (int i = 1; i < sm.nRestrs; i++)
+            {
+                panels.Add(new Panel());
+                labels.Add(new Label());
+                this.Controls.Add(panels[i]);
+                this.Controls.Add(labels[i]);
+                
+            }
+
+            int x = panelRestr1.Left;
+            int y = LabelRestr1.Top;
+            for (int i = 0; i < sm.nRestrs; i++)
+            {
+                panels[i].BackColor = colors[i % colors.Count];
+                panels[i].Size = panels[0].Size;
+
+                labels[i].Text = $"{sm.table[i, 0]}*X1 { ((sm.table[i, 1] > 0) ? "+" : "")} {sm.table[i, 1]}*X2 <= {sm.table[i, 2]}";
+                labels[i].Font = labels[0].Font;
+                labels[i].AutoSize = true;
+
+                panels[i].Left = x;
+                panels[i].Top = y;
+
+                labels[i].Left = x + 20;
+                labels[i].Top = y;
+                y += 20;
+            }
         }
 
         private void panel1_Paint(object sender, PaintEventArgs e)
