@@ -11,7 +11,7 @@ namespace MetodiOptimizaciiLaba
 {
     public class SimplexMethod
     {
-        private Rational[] f;
+        public Rational[] f;
         public Rational[,] restrs;
         public Rational[,] table;
         public Rational[] solution;
@@ -39,8 +39,8 @@ namespace MetodiOptimizaciiLaba
         {
             Rational sum = f[f.Length - 1];
             for (int i = 0; i < point.Length; i++)
-                sum+=f[i] * point[i];
-            
+                sum += f[i] * point[i];
+
             return sum;
         }
 
@@ -210,16 +210,31 @@ namespace MetodiOptimizaciiLaba
                     }
                 }
             }
+            Rational[] fun = new Rational[3];
+
 
             table = new Rational[nRestrs, 3];
 
             int off = nRestrs;
+
+            fun[0] = f[off];
+            fun[1] = f[off + 1];
+            fun[2] = f[off + 2];
             for (int i = 0; i < nRestrs; i++)
             {
-                table[i, 0] = matrix[i,off];
-                table[i, 1] = matrix[i, off+1];
-                table[i, 2] = matrix[i, off+2];
+                table[i, 0] = matrix[i, off];
+                table[i, 1] = matrix[i, off + 1];
+                table[i, 2] = matrix[i, off + 2];
+
+
+                fun[0] -= f[i] * matrix[i, off];
+                fun[1] -= f[i] * matrix[i, off + 1];
+                fun[2] += f[i] * matrix[i, off + 2];
+
             }
+
+            f = fun;
+
         }
 
         public void CountTable()
@@ -303,9 +318,9 @@ namespace MetodiOptimizaciiLaba
                 }
             }
 
-     
 
-            
+
+
             int nFree = freeVariables.Count;
             int nBasis = basisVariables.Count;
 
@@ -331,11 +346,11 @@ namespace MetodiOptimizaciiLaba
             }
 
             Rational sum = f[nVars];
-          
-             
+
+
             for (int i = 0; i < nVars; i++)
                 sum += f[i] * solution[i];
-            
+
             table[nBasis, nFree] = -sum;
 
         }
@@ -382,7 +397,7 @@ namespace MetodiOptimizaciiLaba
 
         public void MakeStep(Point element)
         {
- 
+
             Rational[,] nextTable = new Rational[table.GetLength(0), table.GetLength(1)];
             int row = element.X;
             int col = element.Y;
@@ -488,7 +503,7 @@ namespace MetodiOptimizaciiLaba
             Rational[] v = new Rational[nVars];
 
             for (int i = 0; i < freeVariables.Count; i++)
-                v[freeVariables[i]-1] = 0;
+                v[freeVariables[i] - 1] = 0;
 
             for (int i = 0; i < basisVariables.Count; i++)
                 v[basisVariables[i] - 1] = table[i, freeVariables.Count];
