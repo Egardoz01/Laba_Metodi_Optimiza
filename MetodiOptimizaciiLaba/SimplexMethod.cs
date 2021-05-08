@@ -501,7 +501,14 @@ namespace MetodiOptimizaciiLaba
 
         public Rational GetFmin()
         {
-            return -table[basisVariables.Count, freeVariables.Count];
+            if (isMax)
+            {
+                return table[basisVariables.Count, freeVariables.Count];
+            }
+            else
+            {
+                return -table[basisVariables.Count, freeVariables.Count];
+            }
         }
 
         public Rational[] GetSolution()
@@ -536,6 +543,31 @@ namespace MetodiOptimizaciiLaba
             }
 
             return ans;
+        }
+
+        public bool isInfinity()
+        {
+            for (int i = 0; i < freeVariables.Count; i++)
+            {
+                if (table[nRestrs, i] < 0)
+                {
+                    bool isInf = true;
+                    for (int j = 0; j < nRestrs; j++)
+                    {
+                        if (table[j, i] > 0)
+                        {
+                            isInf = false;
+                            break;
+                        }
+                    }
+
+                    if (isInf)
+                        return true;
+                }
+              
+            }
+
+            return false;
         }
     }
 }

@@ -324,6 +324,11 @@ namespace MetodiOptimizaciiLaba
                         if (form.isFinal())
                         {
                             SimplexMethod smTask = form.GetLastTable().GeterateRestrsAfterBasis(paseFunction());
+                            if (rbMax.Checked)
+                            {
+                                smTask.isMax = true;
+                                smTask.changeFunctionnSign();
+                            }
                             smTask.CountTable();
                             SimplexMethodForm form2 = new SimplexMethodForm(smTask, autoSteps);
                             this.Hide();

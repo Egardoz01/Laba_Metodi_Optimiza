@@ -107,6 +107,7 @@ namespace MetodiOptimizaciiLaba
                     MessageBox.Show("Опорный элемент выбран неправильно");
                     return;
                 }
+                makeStep(p);
             }
         }
 
@@ -136,18 +137,37 @@ namespace MetodiOptimizaciiLaba
 
         private void WriteSolution()
         {
-            lblF.Text = "F*(X)=" + steps[nSteps].GetFmin().ToString();
-            lblX.Text = "X*=(";
-            var v = steps[nSteps].GetSolution();
-            for (int i = 0; i < v.Length; i++)
+            if (basisMethod || !steps[nSteps].isInfinity())
             {
+                lblF.Text = "F*(X)=" + steps[nSteps].GetFmin().ToString();
+                lblX.Text = "X*=(";
+                var v = steps[nSteps].GetSolution();
+                for (int i = 0; i < v.Length; i++)
+                {
 
-                lblX.Text += v[i];
-                if (i != v.Length - 1)
-                    lblX.Text += ",";
+                    lblX.Text += v[i];
+                    if (i != v.Length - 1)
+                        lblX.Text += ",";
+                    else
+                        lblX.Text += ")";
+
+                }
+            }
+            else
+            {
+                if (steps[nSteps].isMax)
+                {
+                    lblF.Text = "F*(X)=∞";
+
+                    lblX.Text = "Функция не ограничена свурху";
+                }
                 else
-                    lblX.Text += ")";
+                {
+                    lblF.Text = "F*(X)=-∞";
 
+                    lblX.Text = "Функция не ограничена снизу";
+
+                }
             }
         }
 
@@ -186,7 +206,17 @@ namespace MetodiOptimizaciiLaba
         }
         public bool isFinal()
         {
+            if (!basisMethod)
+            {
+                if (isInfinity())
+                    return true;
+            }
             return steps[nSteps].GetAvailableOporniyElements().Count == 0;
+        }
+
+        public bool isInfinity()
+        {
+            return steps[nSteps].isInfinity();
         }
 
         private void btnMakeStepCurrent_Click(object sender, EventArgs e)
@@ -208,5 +238,6 @@ namespace MetodiOptimizaciiLaba
             DialogResult = DialogResult.OK;
             Close();
         }
+
     }
 }
