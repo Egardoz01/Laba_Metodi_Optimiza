@@ -21,7 +21,7 @@ namespace MetodiOptimizaciiLaba
         public List<int> basisVariables;
         public List<int> freeVariables;
         public Point OporniyElement = new Point(-1, -1);
-
+        public bool isMax;
         public SimplexMethod(SimplexMethod sm)
         {
             table = sm.table.Clone() as Rational[,];
@@ -148,7 +148,7 @@ namespace MetodiOptimizaciiLaba
             this.solution = solution.Clone() as Rational[];
         }
 
-        public void CountGauss()
+        public Rational[,] CountGauss(bool changeF=true)
         {
             Rational[,] matrix = restrs.Clone() as Rational[,];
             int num_rows = matrix.GetLength(0);
@@ -210,6 +210,11 @@ namespace MetodiOptimizaciiLaba
                     }
                 }
             }
+
+
+            if (!changeF)
+                return matrix;
+
             Rational[] fun = new Rational[3];
 
 
@@ -235,6 +240,7 @@ namespace MetodiOptimizaciiLaba
 
             f = fun;
 
+            return matrix;
         }
 
         public void CountTable()
@@ -515,6 +521,21 @@ namespace MetodiOptimizaciiLaba
         {
             for (int i = 0; i < f.Length; i++)
                 f[i] = -f[i];
+        }
+
+        public Rational[] GetRealAnsver(Rational[] r)
+        {
+            var matrix = CountGauss(false);
+            Rational[] ans = new Rational[nVars];
+            ans[nVars - 2] = r[0];
+            ans[nVars - 1] = r[1];
+
+            for (int i = 0; i < nRestrs; i++)
+            {
+                ans[i] = matrix[i, nVars] - matrix[i, nVars - 2] * r[0] - matrix[i, nVars - 1] * r[1];
+            }
+
+            return ans;
         }
     }
 }

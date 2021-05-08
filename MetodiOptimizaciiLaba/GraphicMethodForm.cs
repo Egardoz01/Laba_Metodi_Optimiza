@@ -151,11 +151,43 @@ namespace MetodiOptimizaciiLaba
             Pen pen1 = new Pen(Color.Blue, 1);
             int mxX = (int)((panel1.Width) / scale) + 1, mxY = (int)(panel1.Height / scale) + 1;
             Rational vx = 1, vy=1;
+
+            for (Rational y = 0; y <= mxX; y += mxY / 100.0)
+            {
+                Rational VSx = -1, VSy = -1, VFx = -1, VFy = -1;
+
+                for (double biba = 0; biba < mxX; biba += mxY / 500.0)
+                {
+                    if (isValid(new KeyValuePair<Rational, Rational>(0 + biba * vx, y + biba * vy)))
+                    {
+
+                        if (VSx == -1 && VSy == -1)
+                        {
+                            VSx = +biba * vx;
+                            VSy = y + biba * vy;
+                        }
+                        else
+                        {
+                            VFx = 0 + biba * vx;
+                            VFy = y + biba * vy;
+                        }
+
+                    }
+                }
+
+                if (VSx != -1 && VSy != -1 && VFx != -1 && VFy != -1)
+                {
+                    g.DrawLine(pen1, toPixel(VSx, VSy), toPixel(VFx, VFy));
+                }
+
+            }
+
+
             for (Rational x = 0; x <= mxX; x+=mxX/100.0)
             {
                 Rational VSx = -1, VSy = -1, VFx = -1, VFy = -1;
 
-                for (double biba=0; biba < mxX; biba += mxX/1000.0)
+                for (double biba=0; biba < mxX; biba += mxX/500.0)
                 {
                     if (isValid(new KeyValuePair<Rational, Rational>(x + biba * vx, 0 + biba * vy)))
                     {
@@ -181,35 +213,7 @@ namespace MetodiOptimizaciiLaba
 
             }
 
-            for (Rational y = 0; y<= mxX; y += mxY / 100.0)
-            {
-                Rational VSx = -1, VSy = -1, VFx = -1, VFy = -1;
-
-                for (double biba = 0; biba < mxX; biba += mxY / 1000.0)
-                {
-                    if (isValid(new KeyValuePair<Rational, Rational>(0 + biba * vx, y + biba * vy)))
-                    {
-
-                        if (VSx == -1 && VSy == -1)
-                        {
-                            VSx = + biba * vx;
-                            VSy = y+ biba * vy;
-                        }
-                        else
-                        {
-                            VFx = 0 + biba * vx;
-                            VFy = y+biba * vy;
-                        }
-
-                    }
-                }
-
-                if (VSx != -1 && VSy != -1 && VFx != -1 && VFy != -1)
-                {
-                    g.DrawLine(pen1, toPixel(VSx, VSy), toPixel(VFx, VFy));
-                }
-
-            }
+            
         }
 
         private void DrawFunction(Graphics g)
@@ -462,6 +466,21 @@ namespace MetodiOptimizaciiLaba
 
 
             lblFunction.Text = $"{sm.f[0]}*X1 { ((sm.f[1] >= 0) ? "+" : "")}  {sm.f[1]}*X2 { ((sm.f[2] >= 0) ? "+" : "")}   {sm.f[2]} -> min";
+
+
+            var best = countBest();
+            lblX.Text = $"X*=({best.Key},{best.Value})";
+            lblF.Text = $"F*={sm.CountRes(new Rational[] { best.Key, best.Value })}";
+
+            if(sm.isMax)
+                sm.changeFunctionnSign();
+
+            lblFAns.Text = $"F*={sm.CountRes(new Rational[] { best.Key, best.Value })}";
+            var ans = sm.GetRealAnsver(new Rational[] { best.Key, best.Value });
+            lblXAns.Text = "X*=(";
+            for (int i = 0; i < ans.Length; i++)
+                lblXAns.Text += (i!=0? ",":"") + ans[i].ToString();
+            lblXAns.Text += ")";
         }
 
         private void panel1_Paint(object sender, PaintEventArgs e)
