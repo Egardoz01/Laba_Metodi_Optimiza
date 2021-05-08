@@ -29,7 +29,7 @@ namespace MetodiOptimizaciiLaba
 
         private void DrawAsis(Graphics g)
         {
-            Pen pen = new Pen(Color.Black);
+            Pen pen = new Pen(Color.Black,2);
             Brush brush = new SolidBrush(Color.Black);
             Font font = new Font("Serif", 8);
             Font font2 = new Font("Serif", 10, FontStyle.Bold);
@@ -90,12 +90,12 @@ namespace MetodiOptimizaciiLaba
                 if (a1.IsZero)
                 {
                     Rational y = c1 / b1;
-                    DrawlineAndNormales(g, i, new Point(0, (int)Math.Round(y.ToDouble())), new Point(mxX, (int)Math.Round(y.ToDouble())));
+                    DrawlineAndNormales(g, i, new Point(0, (int)Math.Round(y.ToDouble())), new Point(mxX, (int)Math.Round(y.ToDouble())), rbAllRestrs.Checked);
                 }
                 else if (b1.IsZero)
                 {
                     Rational x = c1 / a1;
-                    DrawlineAndNormales(g, i, new Point((int)Math.Round(x.ToDouble()), 0), new Point((int)Math.Round(x.ToDouble()), mxY));
+                    DrawlineAndNormales(g, i, new Point((int)Math.Round(x.ToDouble()), 0), new Point((int)Math.Round(x.ToDouble()), mxY), rbAllRestrs.Checked);
                 }
                 else
                 {
@@ -138,59 +138,158 @@ namespace MetodiOptimizaciiLaba
 
                     }
 
-                    DrawlineAndNormales(g, i, p1, p2);
+                    DrawlineAndNormales(g, i, p1, p2, rbAllRestrs.Checked);
                 }
+            }
+            if (rbCommunizm.Checked)
+                DrawCommunizm(g);
+        }
+
+
+        private void DrawCommunizm(Graphics g)
+        {
+            Pen pen1 = new Pen(Color.Blue, 1);
+            int mxX = (int)((panel1.Width) / scale) + 1, mxY = (int)(panel1.Height / scale) + 1;
+            Rational vx = 1, vy=1;
+            for (Rational x = 0; x <= mxX; x+=mxX/100.0)
+            {
+                Rational VSx = -1, VSy = -1, VFx = -1, VFy = -1;
+
+                for (double biba=0; biba < mxX; biba += mxX/1000.0)
+                {
+                    if (isValid(new KeyValuePair<Rational, Rational>(x + biba * vx, 0 + biba * vy)))
+                    {
+
+                        if (VSx == -1 && VSy == -1)
+                        {
+                            VSx = x + biba * vx;
+                            VSy = biba * vy;
+                        }
+                        else
+                        {
+                            VFx = x + biba * vx;
+                            VFy = biba * vy;
+                        }
+
+                    }
+                }
+
+                if (VSx != -1 && VSy != -1 && VFx != -1 && VFy != -1)
+                {
+                    g.DrawLine(pen1, toPixel(VSx, VSy), toPixel(VFx, VFy));
+                }
+
+            }
+
+            for (Rational y = 0; y<= mxX; y += mxY / 100.0)
+            {
+                Rational VSx = -1, VSy = -1, VFx = -1, VFy = -1;
+
+                for (double biba = 0; biba < mxX; biba += mxY / 1000.0)
+                {
+                    if (isValid(new KeyValuePair<Rational, Rational>(0 + biba * vx, y + biba * vy)))
+                    {
+
+                        if (VSx == -1 && VSy == -1)
+                        {
+                            VSx = + biba * vx;
+                            VSy = y+ biba * vy;
+                        }
+                        else
+                        {
+                            VFx = 0 + biba * vx;
+                            VFy = y+biba * vy;
+                        }
+
+                    }
+                }
+
+                if (VSx != -1 && VSy != -1 && VFx != -1 && VFy != -1)
+                {
+                    g.DrawLine(pen1, toPixel(VSx, VSy), toPixel(VFx, VFy));
+                }
+
             }
         }
 
         private void DrawFunction(Graphics g)
         {
-            int mxX = (int)((panel1.Width) / scale) +1, mxY = (int)(panel1.Height / scale) +1;
+            int mxX = (int)((panel1.Width) / scale) + 1, mxY = (int)(panel1.Height / scale) + 1;
             Point p1 = new Point(mxX / 3, mxX / 3);
 
             Pen pen1 = new Pen(Color.Lime, 2);
             Pen pen2 = new Pen(Color.Red, 2);
-            Rational x1 = -10, x2 = mxX;
-            Rational y1, y2;
+            Rational x1 = -1, x2 = mxX, x3;
+            Rational y1, y2, y3;
+            Rational xStart = -1, xFinish = -1;
+            for (Rational biba = 0; biba <= x2; biba += (x2) / 1000)
+            {
+                y3 = (p1.Y + (-biba + p1.X) * sm.f[0]) / sm.f[1];
+                if (y3 >= 0 && y3 <= mxY)
+                {
+                    if (xStart == -1)
+                        xStart = biba;
+                    else
+                        xFinish = biba;
+                }
+
+            }
+
+            x3 = (xFinish + xStart) / 2;
+
             if (sm.f[0].IsZero)
             {
                 y1 = 1;
                 y2 = 1;
+                y3 = 1;
             }
             else
             {
-                y1 = p1.Y + (-x1 + p1.X) * sm.f[1] / sm.f[0];
+                y1 = (p1.Y + (-x1 + p1.X) * sm.f[0]) / sm.f[1];
 
-                y2 = p1.Y + (-x2 + p1.X) * sm.f[1] / sm.f[0];
+                y2 = (p1.Y + (-x2 + p1.X) * sm.f[0]) / sm.f[1];
+
+                y3 = (p1.Y + (-x3 + p1.X) * sm.f[0]) / sm.f[1];
             }
 
             g.DrawLine(pen1, toPixel(x1, y1), toPixel(x2, y2));
 
-          
-            Rational x = -sm.f[1];
-            Rational y = -sm.f[0];
+
+            Rational x = -sm.f[0];
+            Rational y = -sm.f[1];
             x /= (Math.Sqrt((double)(x * x + y * y)));
             y /= (Math.Sqrt((double)(x * x + y * y)));
 
             x *= mxX / 10.0;
             y *= mxX / 10.0;
 
-            g.DrawLine(pen2, toPixel(p1.X, p1.Y), toPixel(x+p1.X, y + p1.Y));
+            g.DrawLine(pen2, toPixel(x3, y3), toPixel(x + x3, y + y3));
 
             double angle = Math.PI * 5 / 6;
             Rational X = x * Math.Cos(angle) + y * Math.Sin(angle);
             Rational Y = y * Math.Cos(angle) - x * Math.Sin(angle);
 
-            g.DrawLine(pen2, toPixel(x+ p1.X, y+ p1.Y), toPixel(x + p1.X + X /5, y + p1.Y + Y /5));
+            g.DrawLine(pen2, toPixel(x + x3, y + y3), toPixel(x + x3 + X / 5, y + y3 + Y / 5));
 
             X = x * Math.Cos(angle) - y * Math.Sin(angle);
             Y = y * Math.Cos(angle) + x * Math.Sin(angle);
 
-            g.DrawLine(pen2, toPixel(x + p1.X, y + p1.Y), toPixel(x + p1.X + X / 5, y + p1.Y + Y / 5));
+            g.DrawLine(pen2, toPixel(x + x3, y + y3), toPixel(x + x3 + X / 5, y + y3 + Y / 5));
         }
 
 
-        private void DrawlineAndNormales(Graphics g, int restrInd, PointF p1, PointF p2)
+        private void DrawBest(Graphics g)
+        {
+
+            var best = countBest();
+            Pen pen = new Pen(Color.Red, 5);
+            Point p = toPixel(best.Key, best.Value);
+            g.DrawRectangle(pen, p.X, p.Y, 1, 1);
+
+        }
+
+
+        private void DrawlineAndNormales(Graphics g, int restrInd, PointF p1, PointF p2, bool normales)
         {
             int mxX = (int)(panel1.Width / scale) + 100, mxY = (int)(panel1.Height / scale) + 100;
 
@@ -202,7 +301,8 @@ namespace MetodiOptimizaciiLaba
             Pen pen1 = new Pen(colors[restrInd % colors.Count], 2);
             Pen pen2 = new Pen(colors[restrInd % colors.Count], 1);
             g.DrawLine(pen1, toPixel(p1.X, p1.Y), toPixel(p2.X, p2.Y));
-
+            if (!normales)
+                return;
             float stepX = (p2.X - p1.X) / 40;
             float stepY = (p2.Y - p1.Y) / 40;
 
@@ -214,11 +314,12 @@ namespace MetodiOptimizaciiLaba
                 x1 = 0;
                 y1 = 0;
 
-                while (Math.Abs(x1) < mxX)
-                    x1 += -100 * (float)a1.ToDouble();
+                while (Math.Abs(ps.X + x1) < mxX  && Math.Abs(ps.Y + y1) < mxY)
+                {
+                    x1 += -(float)a1.ToDouble();
 
-                while (Math.Abs(y1) < mxY)
-                    y1 += -100 * (float)b1.ToDouble();
+                    y1 += -(float)b1.ToDouble();
+                }
 
                 PointF pf = new PointF(ps.X + x1, ps.Y + y1);
 
@@ -284,24 +385,38 @@ namespace MetodiOptimizaciiLaba
                 v.Add(new KeyValuePair<Rational, Rational>(c1 / a1, 0));
             }
 
+            v.Add( new KeyValuePair<Rational, Rational>(0, 0));
             KeyValuePair<Rational, Rational> best = new KeyValuePair<Rational, Rational>();
             bool isFirst = true;
             foreach (var p in v)
             {
-                for (int i = 0; i < sm.nRestrs; i++)
+                if (isValid(p))
                 {
-                    if (p.Key * sm.table[i, 0] + p.Value * sm.table[i, 1] <= sm.table[i, 2])
+                    if (isFirst || countValue(best) > countValue(p))
                     {
-                        if (isFirst || countValue(best) > countValue(p))
-                        {
-                            isFirst = false;
-                            best = p;
-                        }
+                        isFirst = false;
+                        best = p;
                     }
                 }
             }
 
             return best;
+        }
+
+
+        private bool isValid(KeyValuePair<Rational, Rational> p)
+        {
+            if (p.Key < 0 || p.Value < 0)
+                return false;
+            for (int i = 0; i < sm.nRestrs; i++)
+            {
+                if (p.Key * sm.table[i, 0] + p.Value * sm.table[i, 1] > sm.table[i, 2])
+                {
+                    return false;
+                }
+            }
+
+            return true;
         }
 
         private Rational countValue(KeyValuePair<Rational, Rational> p)
@@ -354,6 +469,17 @@ namespace MetodiOptimizaciiLaba
             DrawAsis(e.Graphics);
             DrawRestrs(e.Graphics);
             DrawFunction(e.Graphics);
+            DrawBest(e.Graphics);
+        }
+
+        private void LabelRestr1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void rbAllRestrs_CheckedChanged(object sender, EventArgs e)
+        {
+            panel1.Refresh();
         }
     }
 }

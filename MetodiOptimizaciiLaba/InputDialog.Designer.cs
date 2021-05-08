@@ -37,22 +37,26 @@
             this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.btnSolve = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.rbGraphicMethod = new System.Windows.Forms.RadioButton();
+            this.cbAutoSteps = new System.Windows.Forms.CheckBox();
             this.rbSolutionMethod = new System.Windows.Forms.RadioButton();
             this.rbBasisMethod = new System.Windows.Forms.RadioButton();
             this.dataGridView2 = new System.Windows.Forms.DataGridView();
-            this.cbAutoSteps = new System.Windows.Forms.CheckBox();
-            this.rbGraphicMethod = new System.Windows.Forms.RadioButton();
             this.lblExample = new System.Windows.Forms.Label();
+            this.rbMin = new System.Windows.Forms.RadioButton();
+            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.rbMax = new System.Windows.Forms.RadioButton();
             ((System.ComponentModel.ISupportInitialize)(this.RestrAmount)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.VariablesAmount)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
+            this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // btnImport
             // 
-            this.btnImport.Location = new System.Drawing.Point(33, 125);
+            this.btnImport.Location = new System.Drawing.Point(36, 99);
             this.btnImport.Name = "btnImport";
             this.btnImport.Size = new System.Drawing.Size(96, 34);
             this.btnImport.TabIndex = 13;
@@ -62,7 +66,7 @@
             // 
             // btnSve
             // 
-            this.btnSve.Location = new System.Drawing.Point(147, 125);
+            this.btnSve.Location = new System.Drawing.Point(150, 99);
             this.btnSve.Name = "btnSve";
             this.btnSve.Size = new System.Drawing.Size(86, 34);
             this.btnSve.TabIndex = 12;
@@ -73,7 +77,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(30, 84);
+            this.label2.Location = new System.Drawing.Point(33, 58);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(129, 13);
             this.label2.TabIndex = 11;
@@ -81,7 +85,7 @@
             // 
             // RestrAmount
             // 
-            this.RestrAmount.Location = new System.Drawing.Point(164, 82);
+            this.RestrAmount.Location = new System.Drawing.Point(167, 56);
             this.RestrAmount.Name = "RestrAmount";
             this.RestrAmount.ReadOnly = true;
             this.RestrAmount.Size = new System.Drawing.Size(57, 20);
@@ -91,7 +95,7 @@
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(30, 58);
+            this.label1.Location = new System.Drawing.Point(33, 32);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(128, 13);
             this.label1.TabIndex = 9;
@@ -99,7 +103,7 @@
             // 
             // VariablesAmount
             // 
-            this.VariablesAmount.Location = new System.Drawing.Point(164, 56);
+            this.VariablesAmount.Location = new System.Drawing.Point(167, 30);
             this.VariablesAmount.Maximum = new decimal(new int[] {
             16,
             0,
@@ -148,6 +152,29 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Как решать";
             // 
+            // rbGraphicMethod
+            // 
+            this.rbGraphicMethod.AutoSize = true;
+            this.rbGraphicMethod.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rbGraphicMethod.Location = new System.Drawing.Point(29, 67);
+            this.rbGraphicMethod.Name = "rbGraphicMethod";
+            this.rbGraphicMethod.Size = new System.Drawing.Size(125, 17);
+            this.rbGraphicMethod.TabIndex = 18;
+            this.rbGraphicMethod.Text = "графический метод";
+            this.rbGraphicMethod.UseVisualStyleBackColor = true;
+            this.rbGraphicMethod.CheckedChanged += new System.EventHandler(this.BasicSolutionRadioButton_CheckedChanged);
+            // 
+            // cbAutoSteps
+            // 
+            this.cbAutoSteps.AutoSize = true;
+            this.cbAutoSteps.Location = new System.Drawing.Point(28, 90);
+            this.cbAutoSteps.Name = "cbAutoSteps";
+            this.cbAutoSteps.Size = new System.Drawing.Size(179, 20);
+            this.cbAutoSteps.TabIndex = 17;
+            this.cbAutoSteps.Text = "Решать автоматически";
+            this.cbAutoSteps.UseVisualStyleBackColor = true;
+            this.cbAutoSteps.CheckedChanged += new System.EventHandler(this.cbAutoSteps_CheckedChanged);
+            // 
             // rbSolutionMethod
             // 
             this.rbSolutionMethod.AutoSize = true;
@@ -157,6 +184,7 @@
             this.rbSolutionMethod.Name = "rbSolutionMethod";
             this.rbSolutionMethod.Size = new System.Drawing.Size(196, 17);
             this.rbSolutionMethod.TabIndex = 16;
+            this.rbSolutionMethod.TabStop = true;
             this.rbSolutionMethod.Text = "Заданные базисные переменные";
             this.rbSolutionMethod.UseVisualStyleBackColor = true;
             this.rbSolutionMethod.CheckedChanged += new System.EventHandler(this.BasicSolutionRadioButton_CheckedChanged);
@@ -184,46 +212,61 @@
             this.dataGridView2.Size = new System.Drawing.Size(848, 79);
             this.dataGridView2.TabIndex = 16;
             // 
-            // cbAutoSteps
-            // 
-            this.cbAutoSteps.AutoSize = true;
-            this.cbAutoSteps.Location = new System.Drawing.Point(28, 90);
-            this.cbAutoSteps.Name = "cbAutoSteps";
-            this.cbAutoSteps.Size = new System.Drawing.Size(179, 20);
-            this.cbAutoSteps.TabIndex = 17;
-            this.cbAutoSteps.Text = "Решать автоматически";
-            this.cbAutoSteps.UseVisualStyleBackColor = true;
-            this.cbAutoSteps.CheckedChanged += new System.EventHandler(this.cbAutoSteps_CheckedChanged);
-            // 
-            // rbGraphicMethod
-            // 
-            this.rbGraphicMethod.AutoSize = true;
-            this.rbGraphicMethod.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.rbGraphicMethod.Location = new System.Drawing.Point(29, 67);
-            this.rbGraphicMethod.Name = "rbGraphicMethod";
-            this.rbGraphicMethod.Size = new System.Drawing.Size(125, 17);
-            this.rbGraphicMethod.TabIndex = 18;
-            this.rbGraphicMethod.Text = "графический метод";
-            this.rbGraphicMethod.UseVisualStyleBackColor = true;
-            this.rbGraphicMethod.CheckedChanged += new System.EventHandler(this.BasicSolutionRadioButton_CheckedChanged);
-            // 
             // lblExample
             // 
             this.lblExample.AutoSize = true;
             this.lblExample.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblExample.Location = new System.Drawing.Point(9, 194);
+            this.lblExample.Location = new System.Drawing.Point(12, 147);
             this.lblExample.MaximumSize = new System.Drawing.Size(300, 0);
             this.lblExample.Name = "lblExample";
-            this.lblExample.Size = new System.Drawing.Size(289, 140);
+            this.lblExample.Size = new System.Drawing.Size(284, 140);
             this.lblExample.TabIndex = 17;
-            this.lblExample.Text = "A11*X1 + A12*X2 +... +A1n*Xn <= b1\r\n\r\nA21*X1 + A22*X2 +... +A2n*Xn <= b2\r\n\r\n     " +
-    "                           . . .\r\n\r\nAm1*X1 + Am2*X2 +... +Amn*Xn <= bm\r\n";
+            this.lblExample.Text = "A11*X1 + A12*X2 +... +A1n*Xn  = b1\r\n\r\nA21*X1 + A22*X2 +... +A2n*Xn  = b2\r\n       " +
+    "                         . . .\r\nAm1*X1 + Am2*X2 +... +Amn*Xn  = bm\r\n\r\nXi>=0 i€[1" +
+    ",n]";
+            // 
+            // rbMin
+            // 
+            this.rbMin.AutoSize = true;
+            this.rbMin.Checked = true;
+            this.rbMin.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rbMin.Location = new System.Drawing.Point(24, 30);
+            this.rbMin.Name = "rbMin";
+            this.rbMin.Size = new System.Drawing.Size(80, 19);
+            this.rbMin.TabIndex = 18;
+            this.rbMin.TabStop = true;
+            this.rbMin.Text = "Минимум";
+            this.rbMin.UseVisualStyleBackColor = true;
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.rbMax);
+            this.groupBox2.Controls.Add(this.rbMin);
+            this.groupBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.groupBox2.Location = new System.Drawing.Point(12, 304);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(278, 53);
+            this.groupBox2.TabIndex = 19;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Задача на ";
+            // 
+            // rbMax
+            // 
+            this.rbMax.AutoSize = true;
+            this.rbMax.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.rbMax.Location = new System.Drawing.Point(110, 30);
+            this.rbMax.Name = "rbMax";
+            this.rbMax.Size = new System.Drawing.Size(85, 19);
+            this.rbMax.TabIndex = 19;
+            this.rbMax.Text = "Максимум";
+            this.rbMax.UseVisualStyleBackColor = true;
             // 
             // InputDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1171, 567);
+            this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.lblExample);
             this.Controls.Add(this.dataGridView2);
             this.Controls.Add(this.groupBox1);
@@ -242,6 +285,8 @@
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).EndInit();
+            this.groupBox2.ResumeLayout(false);
+            this.groupBox2.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -264,5 +309,8 @@
         private System.Windows.Forms.CheckBox cbAutoSteps;
         private System.Windows.Forms.RadioButton rbGraphicMethod;
         private System.Windows.Forms.Label lblExample;
+        private System.Windows.Forms.RadioButton rbMin;
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.RadioButton rbMax;
     }
 }

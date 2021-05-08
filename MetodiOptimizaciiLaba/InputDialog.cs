@@ -278,6 +278,9 @@ namespace MetodiOptimizaciiLaba
                 return;
             bool autoSteps = cbAutoSteps.Checked;
 
+            if(rbMax.Checked)
+                sm.changeFunctionnSign();
+
             try
             {
                 if (rbGraphicMethod.Checked)
@@ -382,17 +385,20 @@ namespace MetodiOptimizaciiLaba
 
         private void SetText()
         {
+            /*
             if (rbGraphicMethod.Checked)
                 lblExample.Text = "A11*X1 + A12*X2 + ... + A1n*Xn <= b1\n\rA21*X1 + A22*X2 + ... + A2n*Xn <= b2\n\rAm1*X1 + Am2*X2 + ... + Amn*Xn <= bm\n\r";
             else
                 lblExample.Text = "A11*X1 + A12*X2 + ... + A1n*Xn = b1\n\rA21*X1 + A22*X2 + ... + A2n*Xn = b2\n\rAm1*X1 + Am2*X2 + ... + Amn*Xn = bm\n\r";
-
+            */
         }
 
         private void cbAutoSteps_CheckedChanged(object sender, EventArgs e)
         {
 
         }
+
+        
     }
         
 }

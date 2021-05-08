@@ -510,5 +510,11 @@ namespace MetodiOptimizaciiLaba
 
             return v;
         }
+
+        public void changeFunctionnSign()
+        {
+            for (int i = 0; i < f.Length; i++)
+                f[i] = -f[i];
+        }
     }
 }
