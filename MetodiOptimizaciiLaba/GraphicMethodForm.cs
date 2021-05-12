@@ -542,12 +542,25 @@ namespace MetodiOptimizaciiLaba
 
             if (checkInfinity())
             {
-                lblF.Text = "";
-                lblF.Text = "";
-                lblFAns.Text = " - Infinity";
+              
                 if (sm.isMax)
+                {
                     lblFAns.Text = "Infinity";
-                lblX.Text = "Функция не ограничена";
+                    lblXAns.Text = "Функция не ограничена сверху";
+
+
+                    lblF.Text = "Infinity";
+                    lblX.Text = "Функция не ограничена сверху";
+                }
+                else
+                {
+                    lblFAns.Text = "-Infinity";
+                    lblXAns.Text = "Функция не ограничена снизу";
+
+
+                    lblF.Text = "-Infinity";
+                    lblX.Text = "Функция не ограничена снизу";
+                }
                 return;
             }
 
@@ -573,7 +586,8 @@ namespace MetodiOptimizaciiLaba
             DrawAsis(e.Graphics);
             DrawRestrs(e.Graphics);
             DrawFunction(e.Graphics);
-            DrawBest(e.Graphics);
+            if(!checkInfinity())
+                DrawBest(e.Graphics);
         }
 
         private void LabelRestr1_Click(object sender, EventArgs e)
