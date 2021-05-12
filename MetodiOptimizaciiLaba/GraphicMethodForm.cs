@@ -29,7 +29,7 @@ namespace MetodiOptimizaciiLaba
 
         private void DrawAsis(Graphics g)
         {
-            Pen pen = new Pen(Color.Black,2);
+            Pen pen = new Pen(Color.Black, 2);
             Brush brush = new SolidBrush(Color.Black);
             Font font = new Font("Serif", 8);
             Font font2 = new Font("Serif", 10, FontStyle.Bold);
@@ -150,7 +150,7 @@ namespace MetodiOptimizaciiLaba
         {
             Pen pen1 = new Pen(Color.Blue, 1);
             int mxX = (int)((panel1.Width) / scale) + 1, mxY = (int)(panel1.Height / scale) + 1;
-            Rational vx = 1, vy=1;
+            Rational vx = 1, vy = 1;
 
             for (Rational y = 0; y <= mxX; y += mxY / 100.0)
             {
@@ -183,11 +183,11 @@ namespace MetodiOptimizaciiLaba
             }
 
 
-            for (Rational x = 0; x <= mxX; x+=mxX/100.0)
+            for (Rational x = 0; x <= mxX; x += mxX / 100.0)
             {
                 Rational VSx = -1, VSy = -1, VFx = -1, VFy = -1;
 
-                for (double biba=0; biba < mxX; biba += mxX/500.0)
+                for (double biba = 0; biba < mxX; biba += mxX / 500.0)
                 {
                     if (isValid(new KeyValuePair<Rational, Rational>(x + biba * vx, 0 + biba * vy)))
                     {
@@ -213,7 +213,7 @@ namespace MetodiOptimizaciiLaba
 
             }
 
-            
+
         }
 
         private void DrawFunction(Graphics g)
@@ -261,6 +261,10 @@ namespace MetodiOptimizaciiLaba
 
             Rational x = -sm.f[0];
             Rational y = -sm.f[1];
+            if (x == 0 && y == 0)
+            {
+                return;
+            }
             x /= (Math.Sqrt((double)(x * x + y * y)));
             y /= (Math.Sqrt((double)(x * x + y * y)));
 
@@ -318,7 +322,7 @@ namespace MetodiOptimizaciiLaba
                 x1 = 0;
                 y1 = 0;
 
-                while (Math.Abs(ps.X + x1) < mxX  && Math.Abs(ps.Y + y1) < mxY)
+                while (Math.Abs(ps.X + x1) < mxX && Math.Abs(ps.Y + y1) < mxY)
                 {
                     x1 += -(float)a1.ToDouble();
 
@@ -344,7 +348,75 @@ namespace MetodiOptimizaciiLaba
 
         private KeyValuePair<Rational, Rational> countBest()
         {
+
+            var v = GetAwailableVertexs();
+            KeyValuePair<Rational, Rational> best = new KeyValuePair<Rational, Rational>();
+            bool isFirst = true;
+            foreach (var p in v)
+            {
+                
+                if (isFirst || countValue(best) > countValue(p))
+                {
+                    isFirst = false;
+                    best = p;
+                }
+                
+            }
+
+            return best;
+        }
+
+        private bool checkInfinity()
+        {
+            var v = GetAwailableVertexs();
+            var best = countValue(countBest());
+            foreach (var vert in v)
+            {
+                var x = new KeyValuePair<Rational, Rational>(vert.Key + 1, vert.Value);
+
+                var y = new KeyValuePair<Rational, Rational>(vert.Key, vert.Value+1);
+
+                if (isValid(x) && countValue(x) < best)
+                    return true;
+
+                if (isValid(y) && countValue(y) < best)
+                    return true;
+            }
+
+            foreach (var vert in v)
+            {
+                for (int i = 0; i < sm.nRestrs; i++)
+                {
+                    Rational x = sm.restrs[i, 0];
+                    Rational y = sm.restrs[i, 1];
+
+                    var off = new KeyValuePair<Rational, Rational>(vert.Key + x, vert.Value + y);
+
+                    if(isValid(off) && countValue(off) < best)
+                    {
+                        return true;
+                    }
+
+                    off = new KeyValuePair<Rational, Rational>(vert.Key - x, vert.Value - y);
+
+                    if (isValid(off) && countValue(off) < best)
+                    {
+                        return true;
+                    }
+                }
+            }
+
+
+
+                return false;
+        
+        }
+
+
+        private List<KeyValuePair<Rational, Rational>> GetAwailableVertexs()
+        {
             List<KeyValuePair<Rational, Rational>> v = new List<KeyValuePair<Rational, Rational>>();
+            List<KeyValuePair<Rational, Rational>> vals = new List<KeyValuePair<Rational, Rational>>();
 
             for (int i = 0; i < sm.nRestrs; i++)
                 for (int j = i + 1; j < sm.nRestrs; j++)
@@ -360,7 +432,7 @@ namespace MetodiOptimizaciiLaba
 
                     try
                     {
-                        if (a1.IsZero)
+                        if (a1.IsZero && b1 != 0 && a2 != 0)
                         {
                             Rational y = c1 / b1;
                             Rational x = (c2 - b2 * y) / a2;
@@ -368,9 +440,12 @@ namespace MetodiOptimizaciiLaba
                         }
                         else
                         {
-                            Rational y = (c2 - c1 * a2 / a1) / (b2 - b1 * a2 / a1);
-                            Rational x = (c1 - b1 * y) / a1;
-                            v.Add(new KeyValuePair<Rational, Rational>(x, y));
+                            if (b2 - b1 * a2 / a1 != 0)
+                            {
+                                Rational y = (c2 - c1 * a2 / a1) / (b2 - b1 * a2 / a1);
+                                Rational x = (c1 - b1 * y) / a1;
+                                v.Add(new KeyValuePair<Rational, Rational>(x, y));
+                            }
                         }
                     }
                     catch (Exception ex)
@@ -385,26 +460,23 @@ namespace MetodiOptimizaciiLaba
                 a1 = sm.table[i, 0];
                 b1 = sm.table[i, 1];
                 c1 = sm.table[i, 2];
-                v.Add(new KeyValuePair<Rational, Rational>(0, c1 / b1));
-                v.Add(new KeyValuePair<Rational, Rational>(c1 / a1, 0));
+                if (b1 != 0)
+                    v.Add(new KeyValuePair<Rational, Rational>(0, c1 / b1));
+                if (a1 != 0)
+                    v.Add(new KeyValuePair<Rational, Rational>(c1 / a1, 0));
             }
 
-            v.Add( new KeyValuePair<Rational, Rational>(0, 0));
-            KeyValuePair<Rational, Rational> best = new KeyValuePair<Rational, Rational>();
-            bool isFirst = true;
+            v.Add(new KeyValuePair<Rational, Rational>(0, 0));
+ 
             foreach (var p in v)
             {
                 if (isValid(p))
                 {
-                    if (isFirst || countValue(best) > countValue(p))
-                    {
-                        isFirst = false;
-                        best = p;
-                    }
+                    vals.Add(p);
                 }
             }
 
-            return best;
+            return vals;
         }
 
 
@@ -464,23 +536,36 @@ namespace MetodiOptimizaciiLaba
                 y += 20;
             }
 
+      
 
             lblFunction.Text = $"{sm.f[0]}*X1 { ((sm.f[1] >= 0) ? "+" : "")}  {sm.f[1]}*X2 { ((sm.f[2] >= 0) ? "+" : "")}   {sm.f[2]} -> min";
 
+            if (checkInfinity())
+            {
+                lblF.Text = "";
+                lblF.Text = "";
+                lblFAns.Text = " - Infinity";
+                if (sm.isMax)
+                    lblFAns.Text = "Infinity";
+                lblX.Text = "Функция не ограничена";
+                return;
+            }
 
             var best = countBest();
             lblX.Text = $"X*=({best.Key},{best.Value})";
             lblF.Text = $"F*={sm.CountRes(new Rational[] { best.Key, best.Value })}";
 
-            if(sm.isMax)
+            if (sm.isMax)
                 sm.changeFunctionnSign();
 
             lblFAns.Text = $"F*={sm.CountRes(new Rational[] { best.Key, best.Value })}";
             var ans = sm.GetRealAnsver(new Rational[] { best.Key, best.Value });
             lblXAns.Text = "X*=(";
             for (int i = 0; i < ans.Length; i++)
-                lblXAns.Text += (i!=0? ",":"") + ans[i].ToString();
+                lblXAns.Text += (i != 0 ? "," : "") + ans[i].ToString();
             lblXAns.Text += ")";
+            if (sm.isMax)
+                sm.changeFunctionnSign();
         }
 
         private void panel1_Paint(object sender, PaintEventArgs e)
