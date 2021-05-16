@@ -33,6 +33,7 @@ namespace MetodiOptimizaciiLaba
             solution = sm.solution.Clone() as Rational[];
             nVars = sm.nVars;
             nRestrs = sm.nRestrs;
+            isMax = sm.isMax;
         }
 
         public Rational CountRes(Rational[] point)
