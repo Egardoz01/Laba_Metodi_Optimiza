@@ -247,6 +247,16 @@ namespace MetodiOptimizaciiLaba
                 y2 = 1;
                 y3 = 1;
             }
+            else if (sm.f[1].IsZero)
+            {
+
+                x1 = 1;
+                x2 = 1;
+                x3 = 1;
+                y1 = 0;
+                y2 = mxY;
+                y3 = mxY / 2;
+            }
             else
             {
                 y1 = (p1.Y + (-x1 + p1.X) * sm.f[0]) / sm.f[1];
@@ -438,7 +448,13 @@ namespace MetodiOptimizaciiLaba
                             Rational x = (c2 - b2 * y) / a2;
 
                         }
-                        else
+                        else if (a2.IsZero && b2 != 0 && a1 != 0)
+                        {
+
+                            Rational y = c2 / b2;
+                            Rational x = (c1 - b1 * y) / a1;
+
+                        } else if (!a1.IsZero && !a2.IsZero)
                         {
                             if (b2 - b1 * a2 / a1 != 0)
                             {
