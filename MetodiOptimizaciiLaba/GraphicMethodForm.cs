@@ -87,17 +87,17 @@ namespace MetodiOptimizaciiLaba
                 a1 = sm.table[i, 0];
                 b1 = sm.table[i, 1];
                 c1 = sm.table[i, 2];
-                if (a1.IsZero)
+                if (a1.IsZero && !b1.IsZero)
                 {
                     Rational y = c1 / b1;
                     DrawlineAndNormales(g, i, new Point(0, (int)Math.Round(y.ToDouble())), new Point(mxX, (int)Math.Round(y.ToDouble())), rbAllRestrs.Checked);
                 }
-                else if (b1.IsZero)
+                else if (b1.IsZero && !a1.IsZero)
                 {
                     Rational x = c1 / a1;
                     DrawlineAndNormales(g, i, new Point((int)Math.Round(x.ToDouble()), 0), new Point((int)Math.Round(x.ToDouble()), mxY), rbAllRestrs.Checked);
                 }
-                else
+                else if(!b1.IsZero && !a1.IsZero)
                 {
                     Rational y = c1 / b1;
                     Rational x = c1 / a1;
@@ -372,7 +372,6 @@ namespace MetodiOptimizaciiLaba
                 }
                 
             }
-
             return best;
         }
 
@@ -482,8 +481,10 @@ namespace MetodiOptimizaciiLaba
                     v.Add(new KeyValuePair<Rational, Rational>(c1 / a1, 0));
             }
 
-            v.Add(new KeyValuePair<Rational, Rational>(0, 0));
- 
+            if (isValid(new KeyValuePair<Rational, Rational>(0, 0)))
+            {
+                v.Add(new KeyValuePair<Rational, Rational>(0, 0));
+            }
             foreach (var p in v)
             {
                 if (isValid(p))
@@ -579,22 +580,30 @@ namespace MetodiOptimizaciiLaba
                 }
                 return;
             }
+            if (GetAwailableVertexs().Count != 0)
+            {
+                var best = countBest();
+                lblX.Text = $"X*=({best.Key},{best.Value})";
+                lblF.Text = $"F*={sm.CountRes(new Rational[] { best.Key, best.Value })}";
 
-            var best = countBest();
-            lblX.Text = $"X*=({best.Key},{best.Value})";
-            lblF.Text = $"F*={sm.CountRes(new Rational[] { best.Key, best.Value })}";
+                if (sm.isMax)
+                    sm.changeFunctionnSign();
 
-            if (sm.isMax)
-                sm.changeFunctionnSign();
+                lblFAns.Text = $"F*={sm.CountRes(new Rational[] { best.Key, best.Value })}";
+                var ans = sm.GetRealAnsver(new Rational[] { best.Key, best.Value });
+                lblXAns.Text = "X*=(";
+                for (int i = 0; i < ans.Length; i++)
+                    lblXAns.Text += (i != 0 ? "," : "") + ans[i].ToString();
+                lblXAns.Text += ")";
+                if (sm.isMax)
+                    sm.changeFunctionnSign();
+            }
+            else
+            {
+                lblX.Text = $"";
+                lblF.Text = $"Нет решений";
 
-            lblFAns.Text = $"F*={sm.CountRes(new Rational[] { best.Key, best.Value })}";
-            var ans = sm.GetRealAnsver(new Rational[] { best.Key, best.Value });
-            lblXAns.Text = "X*=(";
-            for (int i = 0; i < ans.Length; i++)
-                lblXAns.Text += (i != 0 ? "," : "") + ans[i].ToString();
-            lblXAns.Text += ")";
-            if (sm.isMax)
-                sm.changeFunctionnSign();
+            }
         }
 
         private void panel1_Paint(object sender, PaintEventArgs e)
@@ -602,7 +611,7 @@ namespace MetodiOptimizaciiLaba
             DrawAsis(e.Graphics);
             DrawRestrs(e.Graphics);
             DrawFunction(e.Graphics);
-            if(!checkInfinity())
+            if(!checkInfinity() && GetAwailableVertexs().Count!=0)
                 DrawBest(e.Graphics);
         }
 

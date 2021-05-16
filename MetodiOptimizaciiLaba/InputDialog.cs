@@ -13,7 +13,7 @@ using Microsoft.SolverFoundation.Common;
 namespace MetodiOptimizaciiLaba
 {
 
-   
+
 
     public partial class InputDialog : Form
     {
@@ -21,7 +21,7 @@ namespace MetodiOptimizaciiLaba
         {
             InitializeComponent();
             InputFormInit();
-        
+
         }
         private bool change_value = true;
 
@@ -173,7 +173,7 @@ namespace MetodiOptimizaciiLaba
 
                         output.Add(cur);
                     }
-                   
+
                     File.WriteAllLines(dlg.FileName, output, Encoding.UTF8);
 
 
@@ -192,7 +192,7 @@ namespace MetodiOptimizaciiLaba
                 {
 
                     var data = File.ReadAllLines(dlg.FileName).Select(x => x.Split(' ')).ToArray();
-                    var a = data[0].Select(x=> int.Parse(x)).ToArray();
+                    var a = data[0].Select(x => int.Parse(x)).ToArray();
                     int vars = a[0];
                     int rests = a[1];
 
@@ -202,13 +202,13 @@ namespace MetodiOptimizaciiLaba
                     for (int i = 1; i <= rests; i++)
                         RestrAmount.Value = i;
 
-                    for (int i = 1; i <=vars+1; i++)
+                    for (int i = 1; i <= vars + 1; i++)
                         dataGridView1.Rows[1].Cells[i].Value = data[1][i];
 
                     for (int j = 2; j < rests + 2; j++)
                     {
-                        for (int i = 1; i <=vars+1; i++)
-                            dataGridView1.Rows[j+1].Cells[i].Value = data[j][i];
+                        for (int i = 1; i <= vars + 1; i++)
+                            dataGridView1.Rows[j + 1].Cells[i].Value = data[j][i];
                     }
 
                     LoadBasicSolutionGrid((int)VariablesAmount.Value);
@@ -252,7 +252,7 @@ namespace MetodiOptimizaciiLaba
             int restrs_amount = dataGridView1.RowCount - 3;
             Rational[] f = paseFunction();
 
-            Rational[,] restrs = new Rational[restrs_amount, vars_amount+1];
+            Rational[,] restrs = new Rational[restrs_amount, vars_amount + 1];
 
             for (int i = 3; i < dataGridView1.Rows.Count; i++)
             {
@@ -280,6 +280,31 @@ namespace MetodiOptimizaciiLaba
         private void btnSolve_Click(object sender, EventArgs e)
         {
             SimplexMethod sm = parseInput();
+
+            if (rbGraphicMethod.Checked)
+            {
+                if (sm.nVars - sm.nRestrs > 2)
+                {
+                    MessageBox.Show("Данную задачу нельзя решить графически в 2д");
+                    return;
+                }
+            }
+
+            if (rbGraphicMethod.Checked)
+            {
+                if (sm.nVars - sm.nRestrs == 1)
+                {
+                    VariablesAmount.Value = VariablesAmount.Value + 1;
+                    sm = parseInput();
+                }
+
+                if (sm.nVars - sm.nRestrs == 0)
+                {
+                    VariablesAmount.Value = VariablesAmount.Value + 1;
+                    VariablesAmount.Value = VariablesAmount.Value + 1;
+                    sm = parseInput();
+                }
+            }
             if (!sm.ValidateInput())
                 return;
             bool autoSteps = cbAutoSteps.Checked;
@@ -293,11 +318,13 @@ namespace MetodiOptimizaciiLaba
             {
                 if (rbGraphicMethod.Checked)
                 {
-                    if (sm.nVars-sm.nRestrs > 2)
+                    if (sm.nVars - sm.nRestrs > 2)
                     {
                         MessageBox.Show("Данную задачу нельзя решить графически в 2д");
                         return;
                     }
+
+
 
                     sm.CountGauss();
                     GraphicMethodForm form = new GraphicMethodForm(sm);
@@ -351,7 +378,7 @@ namespace MetodiOptimizaciiLaba
                 MessageBox.Show(ex.Message);
             }
 
-            
+
         }
 
         private void LoadBasicSolutionGrid(int var_num)
@@ -370,7 +397,7 @@ namespace MetodiOptimizaciiLaba
         private Rational[] GetBasicSolution()
         {
             int var_num = dataGridView2.Columns.Count;
-            Rational[]  solution = new Rational[var_num];
+            Rational[] solution = new Rational[var_num];
             for (int i = 0; i < var_num; i++)
             {
                 string s = dataGridView2.Rows[1].Cells[i].Value as string;
@@ -395,13 +422,13 @@ namespace MetodiOptimizaciiLaba
         }
 
 
-       
+
         private void cbAutoSteps_CheckedChanged(object sender, EventArgs e)
         {
 
         }
 
-        
+
     }
-        
+
 }
