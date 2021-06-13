@@ -166,7 +166,7 @@ namespace MetodiOptimizaciiLaba
                 {
                     lblF.Text = "F*(X)=∞";
 
-                    lblX.Text = "Функция не ограничена свурху";
+                    lblX.Text = "Функция не ограничена сверху";
                 }
                 else
                 {

@@ -199,44 +199,52 @@ namespace MetodiOptimizaciiLaba
         private void btnImport_Click(object sender, EventArgs e)
         {
             clearAll();
-            using (OpenFileDialog dlg = new OpenFileDialog())
+            try
             {
-                dlg.Filter = "TXT (*.txt)|*.txt";
-           
-                if (dlg.ShowDialog() == DialogResult.OK)
+                using (OpenFileDialog dlg = new OpenFileDialog())
                 {
+                    dlg.Filter = "TXT (*.txt)|*.txt";
 
-                    var data = File.ReadAllLines(dlg.FileName).Select(x => x.Split(' ')).ToArray();
-                    
-                    var a = data[0].Select( x => x=="" || x==" "? 0 : int.Parse(x)).ToArray();
-                    int vars = a[0];
-                    int rests = a[1];
-
-                    for (int i = 1; i <= vars; i++)
-                        VariablesAmount.Value = i;
-
-                    for (int i = 1; i <= rests; i++)
-                        RestrAmount.Value = i;
-
-                    for (int i = 1; i <= vars + 1; i++)
-                        dataGridView1.Rows[1].Cells[i].Value = data[1][i];
-
-                    for (int j = 2; j < rests + 2; j++)
+                    if (dlg.ShowDialog() == DialogResult.OK)
                     {
+
+                        var data = File.ReadAllLines(dlg.FileName).Select(x => x.Split(' ')).ToArray();
+
+                        var a = data[0].Select(x => x == "" || x == " " ? 0 : int.Parse(x)).ToArray();
+                        int vars = a[0];
+                        int rests = a[1];
+
+                        for (int i = 1; i <= vars; i++)
+                            VariablesAmount.Value = i;
+
+                        for (int i = 1; i <= rests; i++)
+                            RestrAmount.Value = i;
+
                         for (int i = 1; i <= vars + 1; i++)
-                            dataGridView1.Rows[j + 1].Cells[i].Value = data[j][i];
+                            dataGridView1.Rows[1].Cells[i].Value = data[1][i];
+
+                        for (int j = 2; j < rests + 2; j++)
+                        {
+                            for (int i = 1; i <= vars + 1; i++)
+                                dataGridView1.Rows[j + 1].Cells[i].Value = data[j][i];
+                        }
+
+                        LoadBasicSolutionGrid((int)VariablesAmount.Value);
+                        setStyle();
+
+                        dataGridView1.Columns[0].ReadOnly = true;
+                        dataGridView1.Rows[0].ReadOnly = true;
+                        dataGridView1.Rows[2].ReadOnly = true;
                     }
 
-                    LoadBasicSolutionGrid((int)VariablesAmount.Value);
-                    setStyle();
 
-                    dataGridView1.Columns[0].ReadOnly = true;
-                    dataGridView1.Rows[0].ReadOnly = true;
-                    dataGridView1.Rows[2].ReadOnly = true;
+
                 }
-
-
-
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("неверный формат ввода");
+                clearAll();
             }
         }
 
@@ -267,7 +275,8 @@ namespace MetodiOptimizaciiLaba
             int vars_amount = dataGridView1.ColumnCount - 2;
             int restrs_amount = dataGridView1.RowCount - 3;
             Rational[] f = paseFunction();
-
+            if (f == null)
+                return null;
             Rational[,] restrs = new Rational[restrs_amount, vars_amount + 1];
 
             for (int i = 3; i < dataGridView1.Rows.Count; i++)
@@ -296,7 +305,8 @@ namespace MetodiOptimizaciiLaba
         private void btnSolve_Click(object sender, EventArgs e)
         {
             SimplexMethod sm = parseInput();
-
+            if (sm == null)
+                return;
             if (rbGraphicMethod.Checked)
             {
                 if (sm.nVars - sm.nRestrs > 2)
@@ -312,6 +322,8 @@ namespace MetodiOptimizaciiLaba
                 {
                     VariablesAmount.Value = VariablesAmount.Value + 1;
                     sm = parseInput();
+                    if (sm == null)
+                        return;
                 }
 
                 if (sm.nVars - sm.nRestrs == 0)
@@ -319,6 +331,8 @@ namespace MetodiOptimizaciiLaba
                     VariablesAmount.Value = VariablesAmount.Value + 1;
                     VariablesAmount.Value = VariablesAmount.Value + 1;
                     sm = parseInput();
+                    if (sm == null)
+                        return;
                 }
             }
             if (!sm.ValidateInput())
@@ -354,7 +368,10 @@ namespace MetodiOptimizaciiLaba
 
                     if (rbSolutionMethod.Checked)
                     {
-                        sm.SetBasicSolution(GetBasicSolution(),sm.nRestrs);
+                        var sol = GetBasicSolution();
+                        if (sol == null)
+                            return;
+                        sm.SetBasicSolution(sol,sm.nRestrs);
                         sm.CountTable();
                         SimplexMethodForm form = new SimplexMethodForm(sm, autoSteps);
                         this.Hide();
@@ -379,7 +396,10 @@ namespace MetodiOptimizaciiLaba
                                 MessageBox.Show("Ограничения системы не совместны, решений нет ");
                                 return;
                             }
-                            SimplexMethod smTask = form.GetLastTable().GeterateRestrsAfterBasis(paseFunction());
+                            var f = paseFunction();
+                            if (f == null)
+                                return;
+                            SimplexMethod smTask = form.GetLastTable().GeterateRestrsAfterBasis(f);
                             if (rbMax.Checked)
                             {
                                 smTask.isMax = true;
