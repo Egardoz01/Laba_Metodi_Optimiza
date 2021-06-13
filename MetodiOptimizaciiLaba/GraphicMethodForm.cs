@@ -396,8 +396,8 @@ namespace MetodiOptimizaciiLaba
             {
                 for (int i = 0; i < sm.nRestrs; i++)
                 {
-                    Rational x = sm.restrs[i, 0];
-                    Rational y = sm.restrs[i, 1];
+                    Rational x = -sm.table[i, 1];
+                    Rational y = sm.table[i,0];
 
                     var off = new KeyValuePair<Rational, Rational>(vert.Key + x, vert.Value + y);
 
@@ -503,7 +503,8 @@ namespace MetodiOptimizaciiLaba
                 return false;
             for (int i = 0; i < sm.nRestrs; i++)
             {
-                if (p.Key * sm.table[i, 0] + p.Value * sm.table[i, 1] > sm.table[i, 2])
+                Rational k = p.Key * sm.table[i, 0] + p.Value * sm.table[i, 1];
+                if ( k> sm.table[i, 2])
                 {
                     return false;
                 }

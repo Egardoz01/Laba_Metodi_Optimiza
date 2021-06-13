@@ -183,16 +183,32 @@ namespace MetodiOptimizaciiLaba
             }
         }
 
+        private void clearAll()
+        {
+            int vars = (int)VariablesAmount.Value;
+            int restrs = (int)RestrAmount.Value;
+
+            for (int i = restrs - 1; i >=0; i--)
+                RestrAmount.Value = i;
+
+            for (int i = vars - 1; i >=0; i--)
+                VariablesAmount.Value = i;
+
+        }
+
         private void btnImport_Click(object sender, EventArgs e)
         {
+            clearAll();
             using (OpenFileDialog dlg = new OpenFileDialog())
             {
                 dlg.Filter = "TXT (*.txt)|*.txt";
+           
                 if (dlg.ShowDialog() == DialogResult.OK)
                 {
 
                     var data = File.ReadAllLines(dlg.FileName).Select(x => x.Split(' ')).ToArray();
-                    var a = data[0].Select(x => int.Parse(x)).ToArray();
+                    
+                    var a = data[0].Select( x => x=="" || x==" "? 0 : int.Parse(x)).ToArray();
                     int vars = a[0];
                     int rests = a[1];
 
@@ -389,8 +405,11 @@ namespace MetodiOptimizaciiLaba
 
         private void LoadBasicSolutionGrid(int var_num)
         {
+           
             dataGridView2.Columns.Clear();
             dataGridView2.Rows.Clear();
+            if (var_num == 0)
+                return;
             string[] ar = new string[var_num];
             for (int i = 0; i < var_num; i++)
                 dataGridView2.Columns.Add("", "");
