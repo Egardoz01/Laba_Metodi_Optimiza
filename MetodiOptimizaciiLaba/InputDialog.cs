@@ -338,7 +338,7 @@ namespace MetodiOptimizaciiLaba
 
                     if (rbSolutionMethod.Checked)
                     {
-                        sm.SetBasicSolution(GetBasicSolution());
+                        sm.SetBasicSolution(GetBasicSolution(),sm.nRestrs);
                         sm.CountTable();
                         SimplexMethodForm form = new SimplexMethodForm(sm, autoSteps);
                         this.Hide();
@@ -357,6 +357,12 @@ namespace MetodiOptimizaciiLaba
 
                         if (form.isFinal())
                         {
+
+                            if (form.resultF() != 0)
+                            {
+                                MessageBox.Show("Ограничения системы не совместны, решений нет ");
+                                return;
+                            }
                             SimplexMethod smTask = form.GetLastTable().GeterateRestrsAfterBasis(paseFunction());
                             if (rbMax.Checked)
                             {

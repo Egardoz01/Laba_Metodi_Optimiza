@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.SolverFoundation.Common;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -133,6 +134,12 @@ namespace MetodiOptimizaciiLaba
 
             btnMakeStepCurrent.Enabled = curStep != nSteps;
 
+        }
+
+
+        public Rational resultF()
+        {
+            return steps[nSteps].GetFmin();
         }
 
         private void WriteSolution()

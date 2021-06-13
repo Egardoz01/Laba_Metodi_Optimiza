@@ -121,12 +121,14 @@ namespace MetodiOptimizaciiLaba
                 return;
         }
 
-        public void SetBasicSolution(Rational[] solution)
+        public void SetBasicSolution(Rational[] solution, int basis)
         {
-
             if (solution.Length != nVars)
                 throw new Exception("Решение не соответствует количеству переменных");
 
+            for (int i = 0; i < solution.Length; i++)
+                if (solution[i] < 0)
+                    throw new Exception("Решение не соответствует ограничениям задачи");
             basisVariables = new List<int>();
             freeVariables = new List<int>();
             for (int i = 0; i < nVars; i++)
@@ -134,6 +136,12 @@ namespace MetodiOptimizaciiLaba
                     basisVariables.Add(i + 1);
                 else
                     freeVariables.Add(i + 1);
+
+            while (basisVariables.Count < basis)
+            {
+                basisVariables.Add(freeVariables[0]);
+                freeVariables.RemoveAt(0);
+            }
 
             for (int i = 0; i < nRestrs; i++)
             {
@@ -149,7 +157,7 @@ namespace MetodiOptimizaciiLaba
             this.solution = solution.Clone() as Rational[];
         }
 
-        public Rational[,] CountGauss(bool changeF=true)
+        public Rational[,] CountGauss(bool changeF = true)
         {
             Rational[,] matrix = restrs.Clone() as Rational[,];
             int num_rows = matrix.GetLength(0);
@@ -444,6 +452,15 @@ namespace MetodiOptimizaciiLaba
             Rational[] f = new Rational[nVars + 1];
             Rational[,] r = new Rational[nRestrs, nVars + 1];
 
+            for (int i = 0; i < this.nRestrs; i++)
+                if (restrs[i, this.nVars] < 0)
+                    for (int j = 0; j <=this.nVars; j++)
+                    {
+                        restrs[i, j] = -restrs[i, j];
+                    }//меняем знак строки если в конце строки стоит минус
+
+
+
             for (int i = 0; i < nVars; i++)
             {
                 if (i >= this.nVars)
@@ -464,7 +481,7 @@ namespace MetodiOptimizaciiLaba
             for (int i = 0; i < nRestrs; i++)
                 sol[this.nVars + i] = r[i, nVars];
 
-            sm.SetBasicSolution(sol);
+            sm.SetBasicSolution(sol, nRestrs);
             return sm;
         }
 
@@ -485,7 +502,10 @@ namespace MetodiOptimizaciiLaba
             }
 
             for (int i = 0; i < basisVariables.Count; i++)
-                r[i, basisVariables[i] - 1] = 1;
+                if (basisVariables[i] <= nVars)
+                {
+                    r[i, basisVariables[i] - 1] = 1;
+                }
 
             Rational[] sol = new Rational[nVars];
             for (int i = 0; i < nRestrs; i++)
@@ -495,7 +515,7 @@ namespace MetodiOptimizaciiLaba
             }
 
             SimplexMethod sm = new SimplexMethod(f, r);
-            sm.SetBasicSolution(sol);
+            sm.SetBasicSolution(sol, nRestrs);
 
             return sm;
         }
@@ -565,7 +585,7 @@ namespace MetodiOptimizaciiLaba
                     if (isInf)
                         return true;
                 }
-              
+
             }
 
             return false;
