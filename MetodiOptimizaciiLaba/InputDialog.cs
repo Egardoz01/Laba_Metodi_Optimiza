@@ -120,6 +120,7 @@ namespace MetodiOptimizaciiLaba
                 RestrAmount.Value = before;
                 return;
             }
+            LoadBasicVariables(now);
             if (now > before)
             {
                 dataGridView1.Rows.Add("𝜑" + now);
@@ -230,6 +231,7 @@ namespace MetodiOptimizaciiLaba
                         }
 
                         LoadBasicSolutionGrid((int)VariablesAmount.Value);
+                        LoadBasicVariables((int)RestrAmount.Value);
                         setStyle();
 
                         dataGridView1.Columns[0].ReadOnly = true;
@@ -302,6 +304,43 @@ namespace MetodiOptimizaciiLaba
             return sm;
         }
 
+        private int[] GetBasicIndexes()
+        {
+            int rest_num = dataGridView3.Columns.Count;
+            int var_num = (int)VariablesAmount.Value;
+            int[] indexes = new int[rest_num];
+            for (int i = 0; i < rest_num; i++)
+            {
+                string s = dataGridView3.Rows[1].Cells[i].Value as string;
+                try
+                {
+                    indexes[i] = int.Parse(s);
+                    if (indexes[i] < 1 || indexes[i] > var_num)
+                    {
+                        MessageBox.Show("Неверный вормат ввода " + s);
+                        return null;
+                    }
+
+                    for(int j=0; j<i; j++)
+                        if(indexes[i]==indexes[j])
+                        {
+                            MessageBox.Show("Неверный вормат ввода " + s);
+                            return null;
+                        }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Неверный вормат ввода " + s);
+                    return null;
+                }
+            }
+
+
+
+
+            return indexes;
+        }
+
         private void btnSolve_Click(object sender, EventArgs e)
         {
             SimplexMethod sm = parseInput();
@@ -354,8 +393,10 @@ namespace MetodiOptimizaciiLaba
                         return;
                     }
 
-
-
+                    var bi = GetBasicIndexes();
+                    if (bi == null)
+                        return;
+                    sm.setBasicIndexes(bi);
                     sm.CountGauss();
                     GraphicMethodForm form = new GraphicMethodForm(sm);
                     this.Hide();
@@ -371,8 +412,15 @@ namespace MetodiOptimizaciiLaba
                         var sol = GetBasicSolution();
                         if (sol == null)
                             return;
-                        sm.SetBasicSolution(sol,sm.nRestrs);
-                        sm.CountTable();
+                        try
+                        {
+                            sm.SetBasicSolution(sol, sm.nRestrs);
+                            sm.CountTable();
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show("Неверное базисное решение");
+                        }
                         SimplexMethodForm form = new SimplexMethodForm(sm, autoSteps);
                         this.Hide();
                         form.ShowDialog();
@@ -437,6 +485,28 @@ namespace MetodiOptimizaciiLaba
                 ar[i - 1] = "X" + i;
             dataGridView2.Rows.Add(ar);
             dataGridView2.Rows.Add();
+
+        }
+
+        private void LoadBasicVariables(int restr_num)
+        {
+
+            dataGridView3.Columns.Clear();
+            dataGridView3.Rows.Clear();
+            if (restr_num <= 0)
+                return;
+
+            string[] ar2 = new string[restr_num];
+            string[] ar3 = new string[restr_num];
+            for (int i = 0; i < restr_num; i++)
+                dataGridView3.Columns.Add("", "");
+            for (int i = 1; i <= restr_num; i++)
+                ar2[i - 1] = "X" + i;
+            for (int i = 1; i <= restr_num; i++)
+                ar3[i - 1] =  i.ToString();
+            dataGridView3.Rows.Add(ar2);
+            dataGridView3.Rows.Add(ar3);
+  
         }
 
         private Rational[] GetBasicSolution()
@@ -464,6 +534,9 @@ namespace MetodiOptimizaciiLaba
             dataGridView2.Visible = rbSolutionMethod.Checked;
 
             cbAutoSteps.Enabled = rbSolutionMethod.Checked || rbBasisMethod.Checked;
+
+            label3.Visible = rbGraphicMethod.Checked;
+            dataGridView3.Visible = rbGraphicMethod.Checked;
         }
 
 

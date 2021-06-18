@@ -157,6 +157,41 @@ namespace MetodiOptimizaciiLaba
             this.solution = solution.Clone() as Rational[];
         }
 
+
+        public void setBasicIndexes(int[] indexes)
+        {
+            Rational[,] newRestrs = restrs.Clone() as Rational[,];
+            int num_rows = newRestrs.GetLength(0);
+            int num_cols = newRestrs.GetLength(1);
+            List<int> l = new List<int>();
+            for (int i = 0; i <nVars; i++)
+            {
+                l.Add(i);
+            }
+            for (int i = 0; i < indexes.Length; i++)
+            {
+                indexes[i]--;
+                l.Remove(indexes[i]);
+            }
+            for (int i = 0; i < indexes.Length; i++)
+            {
+                for (int j = 0; j < num_rows; j++)
+                {
+                    newRestrs[j, i] = restrs[j, indexes[i]];
+                }
+            }
+
+            for (int i = indexes.Length; i < num_cols-1; i++)
+            {
+                int ind = i - indexes.Length;
+                for (int j = 0; j < num_rows; j++)
+                {
+                    newRestrs[j, i] = restrs[j, l[ind]];
+                }
+            }
+            restrs = newRestrs;
+        }
+
         public Rational[,] CountGauss(bool changeF = true)
         {
             Rational[,] matrix = restrs.Clone() as Rational[,];

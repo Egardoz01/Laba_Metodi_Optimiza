@@ -46,12 +46,15 @@
             this.rbMin = new System.Windows.Forms.RadioButton();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.rbMax = new System.Windows.Forms.RadioButton();
+            this.dataGridView3 = new System.Windows.Forms.DataGridView();
+            this.label3 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.RestrAmount)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.VariablesAmount)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).BeginInit();
             this.groupBox2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView3)).BeginInit();
             this.SuspendLayout();
             // 
             // btnImport
@@ -206,7 +209,7 @@
             this.dataGridView2.AllowUserToAddRows = false;
             this.dataGridView2.AllowUserToDeleteRows = false;
             this.dataGridView2.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView2.Location = new System.Drawing.Point(311, 402);
+            this.dataGridView2.Location = new System.Drawing.Point(311, 420);
             this.dataGridView2.MultiSelect = false;
             this.dataGridView2.Name = "dataGridView2";
             this.dataGridView2.Size = new System.Drawing.Size(848, 79);
@@ -261,11 +264,35 @@
             this.rbMax.Text = "Максимум";
             this.rbMax.UseVisualStyleBackColor = true;
             // 
+            // dataGridView3
+            // 
+            this.dataGridView3.AllowUserToAddRows = false;
+            this.dataGridView3.AllowUserToDeleteRows = false;
+            this.dataGridView3.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView3.Location = new System.Drawing.Point(311, 420);
+            this.dataGridView3.Name = "dataGridView3";
+            this.dataGridView3.Size = new System.Drawing.Size(848, 79);
+            this.dataGridView3.TabIndex = 20;
+            this.dataGridView3.Visible = false;
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label3.Location = new System.Drawing.Point(308, 388);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(216, 16);
+            this.label3.TabIndex = 21;
+            this.label3.Text = "Введите базисные переменные";
+            this.label3.Visible = false;
+            // 
             // InputDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1171, 567);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.dataGridView3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.lblExample);
             this.Controls.Add(this.dataGridView2);
@@ -287,6 +314,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView2)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView3)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -312,5 +340,7 @@
         private System.Windows.Forms.RadioButton rbMin;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.RadioButton rbMax;
+        private System.Windows.Forms.DataGridView dataGridView3;
+        private System.Windows.Forms.Label label3;
     }
 }
