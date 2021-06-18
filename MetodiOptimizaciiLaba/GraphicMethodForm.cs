@@ -1,12 +1,7 @@
 ﻿using Microsoft.SolverFoundation.Common;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace MetodiOptimizaciiLaba
@@ -97,7 +92,7 @@ namespace MetodiOptimizaciiLaba
                     Rational x = c1 / a1;
                     DrawlineAndNormales(g, i, new Point((int)Math.Round(x.ToDouble()), 0), new Point((int)Math.Round(x.ToDouble()), mxY), rbAllRestrs.Checked);
                 }
-                else if(!b1.IsZero && !a1.IsZero)
+                else if (!b1.IsZero && !a1.IsZero)
                 {
                     Rational y = c1 / b1;
                     Rational x = c1 / a1;
@@ -138,7 +133,15 @@ namespace MetodiOptimizaciiLaba
 
                     }
 
-                    DrawlineAndNormales(g, i, p1, p2, rbAllRestrs.Checked);
+
+                    if (p1 == new PointF(0, 0) && p2 == new PointF(0, 0))
+                    {
+                        Rational r = ((-mxX * a1 - c1) / b1);
+                        p2 = new PointF(mxX, (float)r.ToDouble());
+                        DrawlineAndNormales(g, i, p1, p2, rbAllRestrs.Checked);
+                    }
+                    else
+                        DrawlineAndNormales(g, i, p1, p2, rbAllRestrs.Checked);
                 }
             }
             if (rbCommunizm.Checked)
@@ -364,13 +367,13 @@ namespace MetodiOptimizaciiLaba
             bool isFirst = true;
             foreach (var p in v)
             {
-                
+
                 if (isFirst || countValue(best) > countValue(p))
                 {
                     isFirst = false;
                     best = p;
                 }
-                
+
             }
             return best;
         }
@@ -383,7 +386,7 @@ namespace MetodiOptimizaciiLaba
             {
                 var x = new KeyValuePair<Rational, Rational>(vert.Key + 1, vert.Value);
 
-                var y = new KeyValuePair<Rational, Rational>(vert.Key, vert.Value+1);
+                var y = new KeyValuePair<Rational, Rational>(vert.Key, vert.Value + 1);
 
                 if (isValid(x) && countValue(x) < best)
                     return true;
@@ -397,11 +400,11 @@ namespace MetodiOptimizaciiLaba
                 for (int i = 0; i < sm.nRestrs; i++)
                 {
                     Rational x = -sm.table[i, 1];
-                    Rational y = sm.table[i,0];
+                    Rational y = sm.table[i, 0];
 
                     var off = new KeyValuePair<Rational, Rational>(vert.Key + x, vert.Value + y);
 
-                    if(isValid(off) && countValue(off) < best)
+                    if (isValid(off) && countValue(off) < best)
                     {
                         return true;
                     }
@@ -417,8 +420,8 @@ namespace MetodiOptimizaciiLaba
 
 
 
-                return false;
-        
+            return false;
+
         }
 
 
@@ -453,7 +456,8 @@ namespace MetodiOptimizaciiLaba
                             Rational y = c2 / b2;
                             Rational x = (c1 - b1 * y) / a1;
 
-                        } else if (!a1.IsZero && !a2.IsZero)
+                        }
+                        else if (!a1.IsZero && !a2.IsZero)
                         {
                             if (b2 - b1 * a2 / a1 != 0)
                             {
@@ -504,7 +508,7 @@ namespace MetodiOptimizaciiLaba
             for (int i = 0; i < sm.nRestrs; i++)
             {
                 Rational k = p.Key * sm.table[i, 0] + p.Value * sm.table[i, 1];
-                if ( k> sm.table[i, 2])
+                if (k > sm.table[i, 2])
                 {
                     return false;
                 }
@@ -554,13 +558,13 @@ namespace MetodiOptimizaciiLaba
                 y += 20;
             }
 
-      
+
 
             lblFunction.Text = $"{sm.f[0]}*X1 { ((sm.f[1] >= 0) ? "+" : "")}  {sm.f[1]}*X2 { ((sm.f[2] >= 0) ? "+" : "")}   {sm.f[2]} -> min";
 
             if (checkInfinity())
             {
-              
+
                 if (sm.isMax)
                 {
                     lblFAns.Text = "Infinity";
@@ -612,7 +616,7 @@ namespace MetodiOptimizaciiLaba
             DrawAsis(e.Graphics);
             DrawRestrs(e.Graphics);
             DrawFunction(e.Graphics);
-            if(!checkInfinity() && GetAwailableVertexs().Count!=0)
+            if (!checkInfinity() && GetAwailableVertexs().Count != 0)
                 DrawBest(e.Graphics);
         }
 
