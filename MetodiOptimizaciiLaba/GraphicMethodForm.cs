@@ -55,9 +55,9 @@ namespace MetodiOptimizaciiLaba
                 y -= (int)Math.Round(scale * interval);
             }
 
-            g.DrawString("X1", font2, brush, panel1.Width - 20, start.Y + 10);
+            g.DrawString("X"+sm.s1, font2, brush, panel1.Width - 20, start.Y + 10);
 
-            g.DrawString("X2", font2, brush, start.X - 20, 0);
+            g.DrawString("X"+sm.s2, font2, brush, start.X - 20, 0);
             g.DrawString("0", font2, brush, start.X - 20, start.Y + 10);
         }
 

@@ -22,6 +22,8 @@ namespace MetodiOptimizaciiLaba
         public List<int> freeVariables;
         public Point OporniyElement = new Point(-1, -1);
         public bool isMax;
+
+        public string s1, s2;
         public SimplexMethod(SimplexMethod sm)
         {
             table = sm.table.Clone() as Rational[,];
@@ -190,6 +192,11 @@ namespace MetodiOptimizaciiLaba
                 }
             }
             restrs = newRestrs;
+
+            l[0]++;
+            l[1]++;
+            s1 = l[0].ToString();
+            s2 = l[1].ToString();
         }
 
         public Rational[,] CountGauss(bool changeF = true)
